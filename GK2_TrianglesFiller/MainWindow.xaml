@@ -5,17 +5,67 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:GK2_TrianglesFiller"
-        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="GK2_TrianglesFiller.MainWindow"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="GK2_TrianglesFiller.MainWindow"
         mc:Ignorable="d"
         Title="Triangles filler" Height="720" Width="1280" Loaded="MetroWindow_Loaded" MinWidth="320" MinHeight="240">
     <DockPanel x:Name="MainPanel">
 
         <Controls:MetroTabControl Width="191.5" HorizontalAlignment="Left">
-            <TabItem Header="TabItem" Height="39" VerticalAlignment="Bottom">
-                <Grid Background="#FFE5E5E5"/>
-            </TabItem>
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5"/>
+            <TabItem Header="Configuration" HorizontalAlignment="Left" Width="192" Margin="0,0,-87,0">
+                <Grid OpacityMask="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" Margin="0,10,0,0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*" />
+                        <ColumnDefinition Width="8*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="107*" />
+                        <RowDefinition Height="71*" />
+                        <RowDefinition Height="107*" />
+                        <RowDefinition Height="107*" />
+                        <RowDefinition Height="73*" />
+                        <RowDefinition Height="69*"/>
+                        <RowDefinition Height="107*" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Column="1" Grid.Row="0">
+
+                        <Label Content="Label" Height="50" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+
+                        <RadioButton  GroupName="{Binding ObjectColorGroup}" x:Name="RadioObjectColor1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding ObjectColorGroup}" x:Name="RadioObjectColor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <DockPanel Grid.Column="1" Grid.Row="1">
+                        <Label Content="Label" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <xctk:ColorPicker HorizontalAlignment="Left" VerticalAlignment="Center" Width="50" Padding="0,0,-1,0" Margin="10,0,0,0"/>
+                    </DockPanel>
+                    <DockPanel Grid.Column="1" Grid.Row="2">
+                        <Label Content="Label" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}" x:Name="RadioLightVersor1" Content="RadioOne" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}" x:Name="RadioLightVersor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </DockPanel>
+
+                    <DockPanel Grid.Column="1" Grid.Row="3">
+                        <Label Content="Label" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton GroupName="{Binding VectorGroup}" x:Name="RadioVector1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="34" Margin="38.4,0"/>
+                        <RadioButton GroupName="{Binding VectorGroup}" x:Name="RadioVector2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" RenderTransformOrigin="0.636,0.257"/>
+                    </DockPanel>
+
+                    <StackPanel Grid.Column="1" Grid.Row="4" Grid.RowSpan="2">
+                        <Label Content="Label" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" x:Name="RadioFillColor1" Content="RadioOne" HorizontalAlignment="Left" Height="33" Margin="38.4,0,0,0"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" x:Name="RadioFillColor2" Content="RadioTwo" HorizontalAlignment="Left" DockPanel.Dock="Top" Height="33" Margin="38.791,0"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" x:Name="RadioFillColor3" Content="RadioThree" Height="33" Margin="38,0,31.11,0"/>
+                        <!-- TODO: Sliders -->
+                    </StackPanel>
+
+                    <DockPanel Grid.Column="1" Grid.Row="6">
+                        <Label Content="Label" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton GroupName="{Binding FactorsGroup}" x:Name="RadioFactors1" Content="Same" DockPanel.Dock="Top" VerticalAlignment="Center" RenderTransformOrigin="1.56,0.657" Width="68"/>
+                        <RadioButton GroupName="{Binding FactorsGroup}" x:Name="RadioFactors2" Content="Random" DockPanel.Dock="Top" Height="36.833" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="-0.197,0.756"/>
+                    </DockPanel>
+                </Grid>
+
             </TabItem>
         </Controls:MetroTabControl>
 
