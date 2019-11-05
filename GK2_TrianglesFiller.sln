@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Blend for Visual Studio Version 16
+VisualStudioVersion = 16.0.29418.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GK2_TrianglesFiller", "GK2_TrianglesFiller\GK2_TrianglesFiller.csproj", "{DEE613E4-6ECC-405B-AF95-2392D5912BB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DEE613E4-6ECC-405B-AF95-2392D5912BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEE613E4-6ECC-405B-AF95-2392D5912BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEE613E4-6ECC-405B-AF95-2392D5912BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEE613E4-6ECC-405B-AF95-2392D5912BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD135B16-A64D-45F3-A53B-35A4AABBC90F}
+	EndGlobalSection
+EndGlobal

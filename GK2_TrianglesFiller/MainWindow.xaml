@@ -1,0 +1,24 @@
+﻿<Controls:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:local="clr-namespace:GK2_TrianglesFiller"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="GK2_TrianglesFiller.MainWindow"
+        mc:Ignorable="d"
+        Title="Triangles filler" Height="720" Width="1280" Loaded="MetroWindow_Loaded" MinWidth="320" MinHeight="240">
+    <DockPanel x:Name="MainPanel">
+
+        <Controls:MetroTabControl Width="191.5" HorizontalAlignment="Left">
+            <TabItem Header="TabItem" Height="39" VerticalAlignment="Bottom">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+        </Controls:MetroTabControl>
+
+        <Canvas x:Name="MainCanvas" Margin="0,10,0,0" SizeChanged="MainCanvas_SizeChanged"/>
+    </DockPanel>
+</Controls:MetroWindow>
