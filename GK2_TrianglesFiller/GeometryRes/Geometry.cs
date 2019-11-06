@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GK2_TrianglesFiller.VertexRes;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using static System.Math;
@@ -22,6 +23,11 @@ namespace GK2_TrianglesFiller.GeometryRes
         // If the number of such sides is odd, then the point is inside the polygon
         public static bool IsPointInsidePolygon(Point p, List<Point> polygon)
         {
+            if(polygon.Count < 3)
+            {
+                return true;
+            }
+
             bool result = false;
             int j = polygon.Count - 1;
             for (int i = 0; i < polygon.Count; ++i)
@@ -39,6 +45,11 @@ namespace GK2_TrianglesFiller.GeometryRes
             }
 
             return result;
+        }
+
+        public static IEnumerable<Point> GetIntersectionPoints(this List<Vertex> triangle, int scanLineY)
+        {
+            return null;
         }
     }
 }

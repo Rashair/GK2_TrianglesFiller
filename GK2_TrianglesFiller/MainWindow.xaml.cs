@@ -1,4 +1,5 @@
 ﻿using GK2_TrianglesFiller.DrawingRes;
+using static GK2_TrianglesFiller.Resources.Configuration;
 using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
@@ -22,17 +23,19 @@ namespace GK2_TrianglesFiller
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private VisualHost host;
+        private TriangleGrid grid;
 
         public MainWindow()
         {
             InitializeComponent();
-            host = new VisualHost();
-            MainCanvas.Children.Add(new TriangleGrid(new Rect()));
         }
 
         private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            if (grid != null)
+            {
+                grid.TriangleGrid_SizeChanged(sender, e);
+            }
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -42,6 +45,9 @@ namespace GK2_TrianglesFiller
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            grid = new TriangleGrid(new Rect(CanvasMargin, CanvasMargin,
+                MainCanvas.ActualWidth - CanvasMargin, MainCanvas.ActualHeight - CanvasMargin));
+            MainCanvas.Children.Add(grid);
         }
     }
 }

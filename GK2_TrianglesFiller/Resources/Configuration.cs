@@ -11,8 +11,10 @@ namespace GK2_TrianglesFiller.Resources
     {
         public const double VertexRadius = 5.0;
         public const double TriangleSideLength = 60.0;
+        public const double CanvasMargin = 0;
+        public const double DPI = 96;
         public static Brush VertexBrush = Brushes.Black;
-        public static Pen VertexPen = new Pen(VertexBrush, 2.0);
+        public static Pen VertexPen = new Pen(VertexBrush, 1.0);
 
         static Configuration()
         {

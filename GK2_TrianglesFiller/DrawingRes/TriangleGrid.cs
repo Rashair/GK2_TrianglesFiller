@@ -8,34 +8,43 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-
+using System.Windows.Media.Imaging;
 using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller.DrawingRes
 {
     class TriangleGrid : FrameworkElement
     {
-        private readonly DrawingGroup drawingGroup;
+        private readonly DrawingGroup gridDrawing;
         private List<List<Vertex>> grid;
+        private WriteableBitmap bitmap;
+        private Rect rect;
+        private int rows;
+        private int cols;
+
         private Vertex currentlyHold;
 
         public TriangleGrid(Rect rect)
         {
+            this.rect = rect;
             this.MouseDown += TriangleGrid_MouseDown;
             this.MouseMove += TriangleGrid_MouseMove;
             this.MouseUp += TriangleGrid_MouseUp;
-            this.SizeChanged += TriangleGrid_SizeChanged;
 
-            drawingGroup = new DrawingGroup();
-            grid = TriangleDrawing.GetGrid(new Rect(20, 20, 1024, 1024));
 
-            TriangleDrawing.DrawGrid(drawingGroup, grid);
+            gridDrawing = new DrawingGroup();
+            grid = TriangleDrawing.GetGrid(rect);
+            rows = grid.Count();
+            cols = grid.First().Count();
+            TriangleDrawing.DrawGrid(gridDrawing, grid);
+            bitmap = new WriteableBitmap((int)rect.Width, (int)rect.Height, DPI, DPI, PixelFormats.Bgra32, null);
+            bitmap.FillGrid(grid);
         }
 
-
-
-        private void TriangleGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        public void TriangleGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            // TODO
+            Console.WriteLine(e.NewSize);
         }
 
         private void TriangleGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -52,7 +61,6 @@ namespace GK2_TrianglesFiller.DrawingRes
                     break;
                 }
             }
-
         }
 
         private void TriangleGrid_MouseMove(object sender, MouseEventArgs e)
@@ -60,6 +68,7 @@ namespace GK2_TrianglesFiller.DrawingRes
             if (currentlyHold != null)
             {
                 currentlyHold.Point = e.GetPosition(this);
+                bitmap.FillTriangle(new List<Vertex> { currentlyHold.Parents[0], currentlyHold.Parents[2], currentlyHold});
             }
         }
 
@@ -79,7 +88,9 @@ namespace GK2_TrianglesFiller.DrawingRes
         protected override void OnRender(DrawingContext drawingContext)
         {
             base.OnRender(drawingContext);
-            drawingContext.DrawDrawing(drawingGroup);
+            drawingContext.DrawImage(bitmap, rect);
+            drawingContext.DrawDrawing(gridDrawing);
+            //drawingContext.DrawImage(bitmap, rect);
         }
     }
 }

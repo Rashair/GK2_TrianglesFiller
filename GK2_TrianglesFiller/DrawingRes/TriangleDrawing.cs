@@ -1,13 +1,16 @@
-﻿using GK2_TrianglesFiller.Resources;
+﻿using GK2_TrianglesFiller.GeometryRes;
+using GK2_TrianglesFiller.Resources;
 using GK2_TrianglesFiller.VertexRes;
-using MathNet.Spatial.Euclidean;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller.DrawingRes
@@ -23,8 +26,8 @@ namespace GK2_TrianglesFiller.DrawingRes
 
         public static List<List<Vertex>> GetGrid(Rect rect, double sideLength = Configuration.TriangleSideLength)
         {
-            int rows = (int)Math.Ceiling(rect.Height / sideLength);
-            int cols = (int)Math.Ceiling(rect.Width / sideLength);
+            int rows = (int)Math.Floor(rect.Height / sideLength);
+            int cols = (int)Math.Floor(rect.Width / sideLength);
 
             var grid = new List<List<Vertex>>(rows);
             for (double heightIt = rect.Top; heightIt < rect.Bottom; heightIt += sideLength)
@@ -49,21 +52,14 @@ namespace GK2_TrianglesFiller.DrawingRes
                 for (int j = 0; j < grid[i].Count; ++j)
                 {
                     Vertex v1 = grid[i][j];
-                    GeometryDrawing gd = new GeometryDrawing(VertexBrush, null, v1.Ellipse);
-                    drawingGroup.Children.Add(gd);
+                    //GeometryDrawing gd = new GeometryDrawing(VertexBrush, null, v1.Ellipse);
+                    //drawingGroup.Children.Add(gd);
 
                     bool spaceOnBottom = i < grid.Count - 1;
                     bool spaceOnRight = j < grid[i].Count - 1;
                     if (spaceOnBottom)
                     {
                         var v2 = grid[i + 1][j];
-                        var line = v1.AddEdge(v2);
-                        GeometryDrawing gd1 = new GeometryDrawing(null, VertexPen, line);
-                        drawingGroup.Children.Add(gd1);
-                    }
-                    if (spaceOnRight)
-                    {
-                        var v2 = grid[i][j + 1];
                         var line = v1.AddEdge(v2);
                         GeometryDrawing gd1 = new GeometryDrawing(null, VertexPen, line);
                         drawingGroup.Children.Add(gd1);
@@ -75,7 +71,87 @@ namespace GK2_TrianglesFiller.DrawingRes
                         GeometryDrawing gd1 = new GeometryDrawing(null, VertexPen, line);
                         drawingGroup.Children.Add(gd1);
                     }
+                    if (spaceOnRight)
+                    {
+                        var v2 = grid[i][j + 1];
+                        var line = v1.AddEdge(v2);
+                        GeometryDrawing gd1 = new GeometryDrawing(null, VertexPen, line);
+                        drawingGroup.Children.Add(gd1);
+                    }
                 }
+            }
+        }
+
+        public static void FillGrid(this WriteableBitmap bitmap, List<List<Vertex>> grid)
+        {
+            for (int i = 0; i < grid.Count - 1; ++i)
+            {
+                for (int j = 0; j < grid[i].Count - 1; ++j)
+                {
+                    var lowerTriangle = new List<Vertex> { grid[i][j], grid[i + 1][j], grid[i + 1][j + 1] };
+                    bitmap.FillTriangle(lowerTriangle);
+
+                    //var upperTriangle = new List<Vertex> { grid[i][j], grid[i][j + 1], grid[i + 1][j + 1] };
+                    //bitmap.FillTriangle(upperTriangle);
+                }
+
+            }
+        }
+
+        public static void FillTriangle(this WriteableBitmap bitmap, List<Vertex> triangle)
+        {
+            var (x1, y1) = triangle[0].Point.GetIntCoordinates();
+            var (x2, y2) = triangle[1].Point.GetIntCoordinates();
+            var (x3, y3) = triangle[2].Point.GetIntCoordinates();
+            bitmap.Clear(Colors.Transparent);
+            var m = (y3 - y1) / (double)(x3 - x1);
+            var b = y1;
+            for(int i = x1 + 1; i < x3 - 1; ++i)
+            {
+                var startPoint = (int) (m * i + b);
+                for(int j = startPoint; j < y3 - 1; ++j) 
+                {
+                    bitmap.DrawPixel(i, j);
+                }
+            }
+        }
+
+        public static void DrawPixel(this WriteableBitmap writeableBitmap, int x, int y)
+        {
+            int column = x;
+            int row = y;
+
+            try
+            {
+                // Reserve the back buffer for updates.
+                writeableBitmap.Lock();
+
+                unsafe
+                {
+                    // Get a pointer to the back buffer.
+                    IntPtr pBackBuffer = writeableBitmap.BackBuffer;
+
+                    // Find the address of the pixel to draw.
+                    int positionShift = row * writeableBitmap.BackBufferStride + column * 4;
+                    pBackBuffer += positionShift;
+
+                    // Compute the pixel's color.
+                    uint color_data = (uint)255 << 24; // A
+                    color_data |= 255 << 16; // R
+                    color_data |= 0 << 8;  // G
+                    color_data |= 0 << 0;  // B
+
+                    // Assign the color data to the pixel.
+                    *((uint*)pBackBuffer) = color_data;
+                }
+
+                // Specify the area of the bitmap that changed.
+                writeableBitmap.AddDirtyRect(new Int32Rect(column, row, 1, 1));
+            }
+            finally
+            {
+                // Release the back buffer and make it available for display.
+                writeableBitmap.Unlock();
             }
         }
     }

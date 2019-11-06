@@ -62,5 +62,9 @@ namespace GK2_TrianglesFiller.GeometryRes
             );
         }
 
+        public static (int x, int y) GetIntCoordinates(this Point p)
+        {
+            return ((int)p.X, (int)p.Y);
+        }
     }
 }
