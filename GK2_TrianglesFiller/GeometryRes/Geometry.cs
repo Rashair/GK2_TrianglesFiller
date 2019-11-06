@@ -46,10 +46,5 @@ namespace GK2_TrianglesFiller.GeometryRes
 
             return result;
         }
-
-        public static IEnumerable<Point> GetIntersectionPoints(this List<Vertex> triangle, int scanLineY)
-        {
-            return null;
-        }
     }
 }

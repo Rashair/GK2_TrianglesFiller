@@ -14,12 +14,8 @@ namespace GK2_TrianglesFiller.VertexRes
         public EllipseGeometry Ellipse { get; }
 
         public List<LineGeometry> Lines { get; }
-        public List<Vertex> Kids { get; }
-
         public List<LineGeometry> ReverseLines { get; }
-        public List<Vertex> Parents { get; }
 
-        //public List<Point> BoundPolygon { get; }
         public Point Point
         {
             get => Ellipse.Center;
@@ -41,9 +37,6 @@ namespace GK2_TrianglesFiller.VertexRes
             Ellipse = new EllipseGeometry(point, Configuration.VertexRadius, Configuration.VertexRadius);
             Lines = new List<LineGeometry>();
             ReverseLines = new List<LineGeometry>();
-            //BoundPolygon = new List<Point>();
-            Kids = new List<Vertex>();
-            Parents = new List<Vertex>();
         }
 
         public Vertex(double x, double y) : this(new Point(x, y))
@@ -73,9 +66,6 @@ namespace GK2_TrianglesFiller.VertexRes
 
         public LineGeometry AddEdge(Vertex v2)
         {
-            Kids.Add(v2);
-            v2.Parents.Add(this);
-
             var line = new LineGeometry(this, v2);
             this.Lines.Add(line);
             v2.ReverseLines.Add(line);

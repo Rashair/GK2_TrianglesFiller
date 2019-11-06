@@ -101,6 +101,7 @@
     <Compile Include="DrawingRes\TriangleDrawing.cs" />
     <Compile Include="DrawingRes\VisualHost.cs" />
     <Compile Include="GeometryRes\PointGeometry.cs" />
+    <Compile Include="GeometryRes\ScanLine.cs" />
     <Compile Include="Resources\Configuration.cs" />
     <Compile Include="VertexRes\Vertex.cs" />
     <Page Include="MainWindow.xaml">

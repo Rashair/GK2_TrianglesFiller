@@ -49,7 +49,6 @@ namespace GK2_TrianglesFiller.DrawingRes
 
         private void TriangleGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Console.WriteLine("Capture: " + e.GetPosition(this));
             var pos = e.GetPosition(this);
             for (int i = 0; i < grid.Count; ++i)
             {
@@ -58,6 +57,7 @@ namespace GK2_TrianglesFiller.DrawingRes
                 {
                     Mouse.Capture(this);
                     currentlyHold = closest;
+                    bitmap.Clear(Colors.White);
                     break;
                 }
             }
@@ -68,7 +68,6 @@ namespace GK2_TrianglesFiller.DrawingRes
             if (currentlyHold != null)
             {
                 currentlyHold.Point = e.GetPosition(this);
-                bitmap.FillTriangle(new List<Vertex> { currentlyHold.Parents[0], currentlyHold.Parents[2], currentlyHold});
             }
         }
 
@@ -77,12 +76,10 @@ namespace GK2_TrianglesFiller.DrawingRes
             if (currentlyHold != null)
             {
                 Mouse.Capture(null);
-                Console.WriteLine("here");
                 currentlyHold.Point = e.GetPosition(this);
                 currentlyHold = null;
+                bitmap.FillGrid(grid);
             }
-
-            Console.WriteLine("Leave: " + e.GetPosition(this));
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -90,7 +87,6 @@ namespace GK2_TrianglesFiller.DrawingRes
             base.OnRender(drawingContext);
             drawingContext.DrawImage(bitmap, rect);
             drawingContext.DrawDrawing(gridDrawing);
-            //drawingContext.DrawImage(bitmap, rect);
         }
     }
 }

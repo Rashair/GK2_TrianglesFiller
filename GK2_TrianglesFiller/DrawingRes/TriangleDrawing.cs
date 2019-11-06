@@ -52,8 +52,11 @@ namespace GK2_TrianglesFiller.DrawingRes
                 for (int j = 0; j < grid[i].Count; ++j)
                 {
                     Vertex v1 = grid[i][j];
-                    //GeometryDrawing gd = new GeometryDrawing(VertexBrush, null, v1.Ellipse);
-                    //drawingGroup.Children.Add(gd);
+                    if (DrawVertices)
+                    {
+                        GeometryDrawing gd = new GeometryDrawing(VertexBrush, null, v1.Ellipse);
+                        drawingGroup.Children.Add(gd);
+                    }
 
                     bool spaceOnBottom = i < grid.Count - 1;
                     bool spaceOnRight = j < grid[i].Count - 1;
@@ -91,27 +94,21 @@ namespace GK2_TrianglesFiller.DrawingRes
                     var lowerTriangle = new List<Vertex> { grid[i][j], grid[i + 1][j], grid[i + 1][j + 1] };
                     bitmap.FillTriangle(lowerTriangle);
 
-                    //var upperTriangle = new List<Vertex> { grid[i][j], grid[i][j + 1], grid[i + 1][j + 1] };
-                    //bitmap.FillTriangle(upperTriangle);
+                    var upperTriangle = new List<Vertex> { grid[i][j], grid[i][j + 1], grid[i + 1][j + 1] };
+                    bitmap.FillTriangle(upperTriangle);
                 }
-
             }
         }
 
         public static void FillTriangle(this WriteableBitmap bitmap, List<Vertex> triangle)
         {
-            var (x1, y1) = triangle[0].Point.GetIntCoordinates();
-            var (x2, y2) = triangle[1].Point.GetIntCoordinates();
-            var (x3, y3) = triangle[2].Point.GetIntCoordinates();
-            bitmap.Clear(Colors.Transparent);
-            var m = (y3 - y1) / (double)(x3 - x1);
-            var b = y1;
-            for(int i = x1 + 1; i < x3 - 1; ++i)
+            var scanLine = new ScanLine(triangle);
+
+            foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
-                var startPoint = (int) (m * i + b);
-                for(int j = startPoint; j < y3 - 1; ++j) 
+                for (int i = 0; i < xList.Count - 1; i+= 2)
                 {
-                    bitmap.DrawPixel(i, j);
+                    bitmap.DrawLine(xList[i], y, xList[i + 1], y, Colors.Yellow);
                 }
             }
         }

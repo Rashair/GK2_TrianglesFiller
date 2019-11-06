@@ -25,6 +25,11 @@ namespace GK2_TrianglesFiller
     {
         private TriangleGrid grid;
 
+
+         private string groupNameValue = Guid.NewGuid().ToString();
+        public string GroupNameValue => this.groupNameValue;
+
+
         public MainWindow()
         {
             InitializeComponent();
