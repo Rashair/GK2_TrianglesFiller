@@ -82,7 +82,7 @@
                         <Label Grid.Row="4" Grid.Column="2"   Content="Specularity"  Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
                         <Slider  Grid.Row="4" Grid.Column="3" Width="121" Margin="0" Minimum="1" LargeChange="5" Value="10" TickPlacement="TopLeft" TickFrequency="10" SmallChange="1"/>
 
-                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{Binding Path=Factors[1], Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors2" Content="Random for each"  HorizontalAlignment="Left" Checked="RadioFactors2_Checked"   />
+                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{Binding Path=Factors[1], Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors2" Content="Random for each"  HorizontalAlignment="Left"  />
                     </Grid>
 
                 </Grid>
