@@ -25,10 +25,20 @@ namespace GK2_TrianglesFiller
     {
         private TriangleGrid grid;
 
+        public string ObjectColorGroup { get; } = Guid.NewGuid().ToString();
+        public bool[] ObjectColor { get; } = { true, false };
 
-         private string groupNameValue = Guid.NewGuid().ToString();
-        public string GroupNameValue => this.groupNameValue;
+        public string LightVersorGroup { get; } = Guid.NewGuid().ToString();
+        public bool[] LightVersor { get; } = { true, false };
 
+        public string VectorGroup { get; } = Guid.NewGuid().ToString();
+        public bool[] Vector { get; } = { true, false };
+
+        public string FillColorGroup { get; } = Guid.NewGuid().ToString();
+        public bool[] FillColor { get; } = { true, false, false };
+
+        public string FactorsGroup { get; } = Guid.NewGuid().ToString();
+        public bool[] Factors { get; } = { true, false };
 
         public MainWindow()
         {

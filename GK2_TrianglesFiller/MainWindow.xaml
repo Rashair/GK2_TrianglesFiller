@@ -19,50 +19,49 @@
                         <ColumnDefinition Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="107*" />
-                        <RowDefinition Height="71*" />
-                        <RowDefinition Height="107*" />
-                        <RowDefinition Height="107*" />
-                        <RowDefinition Height="73*" />
-                        <RowDefinition Height="69*"/>
-                        <RowDefinition Height="107*" />
+                        <RowDefinition Height="90*" />
+                        <RowDefinition Height="60*" />
+                        <RowDefinition Height="90*" />
+                        <RowDefinition Height="90*" />
+                        <RowDefinition Height="120*" />
+                        <RowDefinition Height="150*"/>
                     </Grid.RowDefinitions>
 
                     <DockPanel Grid.Column="1" Grid.Row="0">
-                        <Label Content="Label" Height="50" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton  GroupName="{Binding ObjectColorGroup}" x:Name="RadioObjectColor1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <RadioButton GroupName="{Binding ObjectColorGroup}" x:Name="RadioObjectColor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Object color" Height="50" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton  GroupName="{Binding ObjectColorGroup}" IsChecked="{Binding Path=ObjectColor[0], Mode=TwoWay}" x:Name="RadioObjectColor1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="36" Margin="86,0,87,0"/>
+                        <RadioButton GroupName="{Binding ObjectColorGroup}" IsChecked="{Binding Path=ObjectColor[1], Mode=TwoWay}" x:Name="RadioObjectColor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="45" Margin="86,0,87,0"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="1">
                         <Label Content="Light color" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <xctk:ColorPicker HorizontalAlignment="Left" VerticalAlignment="Center" Width="50" Padding="0,0,-1,0" Margin="10,0,0,0" UseLayoutRounding="False"/>
+                        <xctk:ColorPicker HorizontalAlignment="Center" Width="50" Padding="0,0,-1,0" Margin="10,5,0,10" UseLayoutRounding="False"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="2">
-                        <Label Content="Label" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding LightVersorGroup}" x:Name="RadioLightVersor1" Content="RadioOne" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <RadioButton GroupName="{Binding LightVersorGroup}" x:Name="RadioLightVersor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Content="Light versor" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[0], Mode=TwoWay}" x:Name="RadioLightVersor1" Content="RadioOne" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" Height="38" HorizontalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[1], Mode=TwoWay}" x:Name="RadioLightVersor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Height="36" HorizontalAlignment="Center"/>
                     </DockPanel>
 
                     <DockPanel Grid.Column="1" Grid.Row="3">
-                        <Label Content="Label" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding VectorGroup}" x:Name="RadioVector1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="34" Margin="38.4,0"/>
-                        <RadioButton GroupName="{Binding VectorGroup}" x:Name="RadioVector2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" RenderTransformOrigin="0.636,0.257"/>
+                        <Label Content="Normal vector" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton GroupName="{Binding VectorGroup}" IsChecked="{Binding Path=Vector[0], Mode=TwoWay}" x:Name="RadioVector1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,87,0"/>
+                        <RadioButton GroupName="{Binding VectorGroup}"  IsChecked="{Binding Path=Vector[1], Mode=TwoWay}" x:Name="RadioVector2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" RenderTransformOrigin="0.636,0.257" Height="41" Margin="86,0,87,0"/>
                     </DockPanel>
 
-                    <StackPanel Grid.Column="1" Grid.Row="4" Grid.RowSpan="2" VerticalAlignment="Top">
+                    <StackPanel Grid.Column="1" Grid.Row="4">
                         <Label Content="Fill color" Height="41" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}" x:Name="RadioFillColor1" Content="RadioOne" HorizontalAlignment="Center" Height="33" Margin="38.792,0,19.2,0" Width="95.208"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}" x:Name="RadioFillColor2" Content="RadioTwo" HorizontalAlignment="Center" DockPanel.Dock="Top" Height="33" Margin="38.791,0"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}" x:Name="RadioFillColor3" Content="RadioThree" Height="33" Margin="38,0,31.11,0" HorizontalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}"  IsChecked="{Binding Path=FillColor[0], Mode=TwoWay}" x:Name="RadioFillColor1" Content="RadioOne" HorizontalAlignment="Center" Height="33" Margin="38.792,0,19.2,0" Width="95.208"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[1], Mode=TwoWay}"  x:Name="RadioFillColor2" Content="RadioTwo" HorizontalAlignment="Center" DockPanel.Dock="Top" Height="33" Margin="38.791,0"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[2], Mode=TwoWay}"  x:Name="RadioFillColor3" Content="RadioThree" Height="25" Margin="86,0,79,0" HorizontalAlignment="Center"/>
                         <!-- TODO: Sliders -->
                     </StackPanel>
 
-                    <Grid Grid.Column="1" Grid.Row="5" Margin="0,57,0,0" Grid.RowSpan="2">
+                    <Grid Grid.Column="1" Grid.Row="5" Margin="0,0,0,0" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="8*" />
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="5*" />
+                            <ColumnDefinition Width="10*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="2*" />
@@ -73,17 +72,17 @@
                             <RowDefinition Height="1*" />
                         </Grid.RowDefinitions>
 
-                        <Label Content="Coefficients" Grid.ColumnSpan="4" VerticalAlignment="Center" FontSize="18"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                        <Label Content="Factors" Grid.ColumnSpan="4" VerticalAlignment="Center" FontSize="18"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
 
-                        <RadioButton Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" GroupName="{Binding FactorsGroup}" x:Name="RadioFactors1" Content="Same" HorizontalAlignment="Left"/>
-                        <Label Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Content="Kd"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" HorizontalAlignment="Center" />
+                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{Binding Path=Factors[0], Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors1" Content="Same for all" HorizontalAlignment="Left"/>
+                        <Label Grid.Row="2" Grid.Column="2" Content="Kd"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" HorizontalAlignment="Center" />
                         <Slider  Grid.Row="2" Grid.Column="3" Width="121" Margin="0" Height="24" Maximum="1" SmallChange="0.01" LargeChange="0.1" TickFrequency="0.1" TickPlacement="TopLeft" Value="0.5"/>
-                        <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"  Content="Ks" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"  />
+                        <Label Grid.Row="3" Grid.Column="2"   Content="Ks" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"  />
                         <Slider Grid.Row="3" Grid.Column="3" Width="121" Margin="0" Maximum="1" SmallChange="0.01" Value="0.5" TickFrequency="0.1" LargeChange="0.1" TickPlacement="TopLeft"/>
-                        <Label Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"  Content="Specularity"  Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
-                        <Slider  Grid.Row="4" Grid.Column="3" Width="121" Margin="0" Minimum="1" LargeChange="5" SmallChange="1" TickFrequency="0.1" Value="10"/>
+                        <Label Grid.Row="4" Grid.Column="2"   Content="Specularity"  Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
+                        <Slider  Grid.Row="4" Grid.Column="3" Width="121" Margin="0" Minimum="1" LargeChange="5" Value="10" TickPlacement="TopLeft" TickFrequency="10" SmallChange="1"/>
 
-                        <RadioButton Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" GroupName="{Binding FactorsGroup}" x:Name="RadioFactors2" Content="Random"  HorizontalAlignment="Left"   />
+                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{Binding Path=Factors[1], Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors2" Content="Random for each"  HorizontalAlignment="Left" Checked="RadioFactors2_Checked"   />
                     </Grid>
 
                 </Grid>
