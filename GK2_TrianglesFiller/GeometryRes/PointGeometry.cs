@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GK2_TrianglesFiller.Resources;
+using System;
 using System.Windows;
 
 namespace GK2_TrianglesFiller.GeometryRes
 {
     public static class PointGeometry
     {
-        public static bool ArePointsIntersecting(Point p1, Point p2, double radius)
+        public static bool ArePointsIntersecting(this Point p1, Point p2)
         {
             return (p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y)
-                <= radius * radius;
+                <= Configuration.VertexRadius * Configuration.VertexRadius;
         }
 
         public static Point Multiply(this Point p, double a)

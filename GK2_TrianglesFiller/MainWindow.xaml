@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:GK2_TrianglesFiller"
-        xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="GK2_TrianglesFiller.MainWindow"
-        mc:Ignorable="d"
-        Title="Triangles filler" Height="900" Width="1600" Loaded="MetroWindow_Loaded" MinWidth="640" MinHeight="360" WindowStartupLocation="CenterScreen">
+        xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:drawingres="clr-namespace:GK2_TrianglesFiller.DrawingRes" x:Class="GK2_TrianglesFiller.MainWindow"
+        mc:Ignorable="d" Name="MyWindow"
+        Title="Triangles filler" Height="900" Width="1600" MinWidth="640" MinHeight="360" WindowStartupLocation="CenterScreen" Loaded="MyWindow_Loaded">
     <DockPanel x:Name="MainPanel">
 
         <Controls:MetroTabControl Width="291" HorizontalAlignment="Left">
@@ -23,36 +24,38 @@
                         <RowDefinition Height="60*" />
                         <RowDefinition Height="90*" />
                         <RowDefinition Height="90*" />
-                        <RowDefinition Height="120*" />
+                        <RowDefinition Height="105*"/>
                         <RowDefinition Height="150*"/>
+                        <RowDefinition Height="20*"/>
                     </Grid.RowDefinitions>
 
-                    <DockPanel Grid.Column="1" Grid.Row="0">
-                        <Label Content="Object color" Height="50" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton  GroupName="{Binding ObjectColorGroup}" IsChecked="{Binding Path=ObjectColor[0], Mode=TwoWay}" x:Name="RadioObjectColor1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="36" Margin="86,0,87,0"/>
-                        <RadioButton GroupName="{Binding ObjectColorGroup}" IsChecked="{Binding Path=ObjectColor[1], Mode=TwoWay}" x:Name="RadioObjectColor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="45" Margin="86,0,87,0"/>
-                    </DockPanel>
+                    <StackPanel Grid.Column="1" Grid.Row="0">
+                        <Label Content="Object color" Height="30" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <xctk:ColorPicker x:Name="ObjectColorPicker" Padding="0,0,-1,0" Margin="90,10,90,10" Background="White" SelectedColor="White" SelectedColorChanged="ObjectColorPicker_SelectedColorChanged" />
+                        <Button x:Name="ObjectColorFileButton" Content="Choose picture" Margin="70,10,70,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" />
+                    </StackPanel>
+
                     <DockPanel Grid.Column="1" Grid.Row="1">
-                        <Label Content="Light color" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <xctk:ColorPicker HorizontalAlignment="Center" Width="50" Padding="0,0,-1,0" Margin="10,5,0,10" UseLayoutRounding="False"/>
+                        <Label Content="Light color" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <xctk:ColorPicker HorizontalAlignment="Center" Width="50" Padding="0,0,-1,0" Margin="10,10,10,10" UseLayoutRounding="False"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="2">
-                        <Label Content="Light versor" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <Label Content="Light versor" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
                         <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[0], Mode=TwoWay}" x:Name="RadioLightVersor1" Content="RadioOne" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" Height="38" HorizontalAlignment="Center"/>
                         <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[1], Mode=TwoWay}" x:Name="RadioLightVersor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Height="36" HorizontalAlignment="Center"/>
                     </DockPanel>
 
                     <DockPanel Grid.Column="1" Grid.Row="3">
-                        <Label Content="Normal vector" Height="40" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <Label Content="Normal vector" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
                         <RadioButton GroupName="{Binding VectorGroup}" IsChecked="{Binding Path=Vector[0], Mode=TwoWay}" x:Name="RadioVector1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,87,0"/>
                         <RadioButton GroupName="{Binding VectorGroup}"  IsChecked="{Binding Path=Vector[1], Mode=TwoWay}" x:Name="RadioVector2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" RenderTransformOrigin="0.636,0.257" Height="41" Margin="86,0,87,0"/>
                     </DockPanel>
 
                     <StackPanel Grid.Column="1" Grid.Row="4">
-                        <Label Content="Fill color" Height="41" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}"  IsChecked="{Binding Path=FillColor[0], Mode=TwoWay}" x:Name="RadioFillColor1" Content="RadioOne" HorizontalAlignment="Center" Height="33" Margin="38.792,0,19.2,0" Width="95.208"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[1], Mode=TwoWay}"  x:Name="RadioFillColor2" Content="RadioTwo" HorizontalAlignment="Center" DockPanel.Dock="Top" Height="33" Margin="38.791,0"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[2], Mode=TwoWay}"  x:Name="RadioFillColor3" Content="RadioThree" Height="25" Margin="86,0,79,0" HorizontalAlignment="Center"/>
+                        <Label Content="Fill color" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}"  IsChecked="{Binding Path=FillColor[0], Mode=TwoWay}" x:Name="RadioFillColor1" Content="RadioOne" HorizontalAlignment="Center" Height="33" Margin="87,0,67,0" Width="96"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[1], Mode=TwoWay}"  x:Name="RadioFillColor2" Content="RadioTwo" HorizontalAlignment="Center" DockPanel.Dock="Top" Height="33" Margin="86,0,67,0" Width="96"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[2], Mode=TwoWay}"  x:Name="RadioFillColor3" Content="RadioThree" Height="33" Margin="86,0,67,0" HorizontalAlignment="Center" Width="96"/>
                         <!-- TODO: Sliders -->
                     </StackPanel>
 
@@ -64,12 +67,12 @@
                             <ColumnDefinition Width="10*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="4*" />
+                            <RowDefinition Height="3*" />
                             <RowDefinition Height="2*" />
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
-                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="3*" />
                         </Grid.RowDefinitions>
 
                         <Label Content="Factors" Grid.ColumnSpan="4" VerticalAlignment="Center" FontSize="18"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
@@ -90,6 +93,6 @@
             </TabItem>
         </Controls:MetroTabControl>
 
-        <Canvas x:Name="MainCanvas" Margin="50,50,50,50" SizeChanged="MainCanvas_SizeChanged"/>
+        <Canvas x:Name="MyCanvas" Margin="50,50,50,50" Background="White" UseLayoutRounding="True" />
     </DockPanel>
 </Controls:MetroWindow>

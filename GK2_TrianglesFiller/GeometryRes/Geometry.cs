@@ -1,6 +1,4 @@
-﻿using GK2_TrianglesFiller.VertexRes;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using static System.Math;
 
@@ -23,7 +21,7 @@ namespace GK2_TrianglesFiller.GeometryRes
         // If the number of such sides is odd, then the point is inside the polygon
         public static bool IsPointInsidePolygon(Point p, List<Point> polygon)
         {
-            if(polygon.Count < 3)
+            if (polygon.Count < 3)
             {
                 return true;
             }

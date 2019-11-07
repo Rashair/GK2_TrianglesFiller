@@ -3,90 +3,108 @@ using GK2_TrianglesFiller.VertexRes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller.DrawingRes
 {
-    class TriangleGrid : FrameworkElement
+    class TriangleGrid
     {
-        private readonly DrawingGroup gridDrawing;
-        private List<List<Vertex>> grid;
-        private WriteableBitmap bitmap;
         private Rect rect;
-        private int rows;
-        private int cols;
-
-        private Vertex currentlyHold;
+        private List<List<Vertex>> grid;
 
         public TriangleGrid(Rect rect)
         {
             this.rect = rect;
-            this.MouseDown += TriangleGrid_MouseDown;
-            this.MouseMove += TriangleGrid_MouseMove;
-            this.MouseUp += TriangleGrid_MouseUp;
+            Drawing = new DrawingGroup();
 
-
-            gridDrawing = new DrawingGroup();
-            grid = TriangleDrawing.GetGrid(rect);
-            rows = grid.Count();
-            cols = grid.First().Count();
-            TriangleDrawing.DrawGrid(gridDrawing, grid);
-            bitmap = new WriteableBitmap((int)rect.Width, (int)rect.Height, DPI, DPI, PixelFormats.Bgra32, null);
-            bitmap.FillGrid(grid);
+            InitializeGrid();
         }
 
-        public void TriangleGrid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            // TODO
-            Console.WriteLine(e.NewSize);
-        }
+        public int Rows { get => Grid.Count; }
+        public int Cols { get => Grid.First().Count; }
+        public List<List<Vertex>> Grid { get => grid; }
+        public DrawingGroup Drawing { get; }
 
-        private void TriangleGrid_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        public Vertex FindVertex(Point pos)
         {
-            var pos = e.GetPosition(this);
-            for (int i = 0; i < grid.Count; ++i)
+            int row = (int)Math.Floor(pos.Y / SideLength);
+            int col = (int)Math.Floor(pos.X / SideLength);
+            if (row > Rows || col > Cols || row < 0 || col < 0)
             {
-                var closest = grid[i].FirstOrDefault(v => PointGeometry.ArePointsIntersecting(v, pos, VertexRadius));
+                return null;
+            }
+
+            return pos.ArePointsIntersecting(Grid[row][col]) ? Grid[row][col] :
+                    pos.ArePointsIntersecting(Grid[row + 1][col]) ? Grid[row + 1][col] :
+                    pos.ArePointsIntersecting(Grid[row][col + 1]) ? Grid[row][col + 1] :
+                    pos.ArePointsIntersecting(Grid[row + 1][col + 1]) ? Grid[row + 1][col + 1] :
+                    SearchAll(pos);
+        }
+
+        private Vertex SearchAll(Point pos)
+        {
+            for (int i = 0; i < Grid.Count; ++i)
+            {
+                var closest = Grid[i].FirstOrDefault(v => pos.ArePointsIntersecting(v));
                 if (closest != null)
                 {
-                    Mouse.Capture(this);
-                    currentlyHold = closest;
-                    bitmap.Clear(Colors.White);
-                    break;
+                    return closest;
                 }
             }
+
+            return null;
         }
 
-        private void TriangleGrid_MouseMove(object sender, MouseEventArgs e)
+        private void InitializeGrid()
         {
-            if (currentlyHold != null)
+            int rows = (int)Math.Floor(rect.Height / SideLength);
+            int cols = (int)Math.Floor(rect.Width / SideLength);
+
+            grid = new List<List<Vertex>>(rows);
+            for (double heightIt = rect.Top; heightIt < rect.Bottom; heightIt += SideLength)
             {
-                currentlyHold.Point = e.GetPosition(this);
+                Grid.Add(new List<Vertex>(cols));
+                for (double widthIt = rect.Left; widthIt < rect.Right; widthIt += SideLength)
+                {
+                    Vertex v1 = new Vertex(widthIt, heightIt);
+                    v1.Locked = v1.X == rect.Left || v1.Y == rect.Top || heightIt + SideLength >= rect.Bottom;
+                    Grid.Last().Add(v1);
+                }
+                Grid.Last().Last().Lock();
             }
-        }
 
-        private void TriangleGrid_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (currentlyHold != null)
+            for (int i = 0; i < Grid.Count; ++i)
             {
-                Mouse.Capture(null);
-                currentlyHold.Point = e.GetPosition(this);
-                currentlyHold = null;
-                bitmap.FillGrid(grid);
+                for (int j = 0; j < Grid[i].Count; ++j)
+                {
+                    Vertex v1 = Grid[i][j];
+                    bool spaceOnBottom = i < Grid.Count - 1;
+                    bool spaceOnRight = j < Grid[i].Count - 1;
+                    if (spaceOnBottom)
+                    {
+                        var v2 = Grid[i + 1][j];
+                        var line = v1.AddEdge(v2);
+                        GeometryDrawing gd1 = new GeometryDrawing(null, VertexPen, line);
+                        Drawing.Children.Add(gd1);
+                    }
+                    if (spaceOnBottom && spaceOnRight)
+                    {
+                        var v2 = Grid[i + 1][j + 1];
+                        var line = v1.AddEdge(v2);
+                        GeometryDrawing gd1 = new GeometryDrawing(null, VertexPen, line);
+                        Drawing.Children.Add(gd1);
+                    }
+                    if (spaceOnRight)
+                    {
+                        var v2 = Grid[i][j + 1];
+                        var line = v1.AddEdge(v2);
+                        GeometryDrawing gd1 = new GeometryDrawing(null, VertexPen, line);
+                        Drawing.Children.Add(gd1);
+                    }
+                }
             }
-        }
-
-        protected override void OnRender(DrawingContext drawingContext)
-        {
-            base.OnRender(drawingContext);
-            drawingContext.DrawImage(bitmap, rect);
-            drawingContext.DrawDrawing(gridDrawing);
         }
     }
 }

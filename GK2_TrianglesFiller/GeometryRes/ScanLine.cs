@@ -2,16 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace GK2_TrianglesFiller.GeometryRes
 {
     class ScanLine
     {
         private List<AETPointer> AET;
-        private int[] sortedInd;
+        private readonly int[] sortedInd;
         private List<Vertex> polygon;
 
         public ScanLine(List<Vertex> polygon)
@@ -25,13 +22,15 @@ namespace GK2_TrianglesFiller.GeometryRes
         public IEnumerable<(List<int> xList, int y)> GetIntersectionPoints()
         {
             var minVertex = polygon[sortedInd[0]];
-            (int xMin, int yMin) = minVertex.Point.GetIntCoordinates();
+            int yMin = (int)minVertex.Y;
             int yMax = (int)polygon[sortedInd[polygon.Count - 1]].Y;
 
             int startInd = 0;
             int prevMaxInd = 0;
             while (prevMaxInd < polygon.Count - 1 && polygon[sortedInd[prevMaxInd + 1]].Y == yMin)
+            {
                 ++prevMaxInd;
+            }
 
             for (int y = yMin + 1; y <= yMax; ++y)
             {
@@ -44,28 +43,30 @@ namespace GK2_TrianglesFiller.GeometryRes
                         var prev = polygon[(ind - 1 + polygon.Count) % polygon.Count];
                         if (prev.Y >= current.Y)
                         {
-                            AET.Add(new AETPointer(prev.Y, Math.Min(current.X, prev.X), PointGeometry.Slope(prev, current)));
+                            AET.Add(new AETPointer(prev.Y, prev.X, PointGeometry.Slope(prev, current)));
                         }
                         else
                         {
-                            AET.Remove(new AETPointer(prev.Y, Math.Min(current.X, prev.X), 1));
+                            AET.Remove(new AETPointer(prev.Y, prev.X, 1));
                         }
 
                         var next = polygon[(ind + 1) % polygon.Count];
                         if (next.Y >= current.Y)
                         {
-                            AET.Add(new AETPointer(next.Y, Math.Min(current.X, next.X), PointGeometry.Slope(current, next)));
+                            AET.Add(new AETPointer(next.Y, next.X, PointGeometry.Slope(current, next)));
                         }
                         else
                         {
-                            AET.Remove(new AETPointer(next.Y, Math.Min(current.X, next.X), 1));
+                            AET.Remove(new AETPointer(next.Y, next.X, 1));
                         }
                     }
 
                     ++prevMaxInd;
                     startInd = prevMaxInd;
                     while (prevMaxInd < polygon.Count - 1 && polygon[sortedInd[prevMaxInd + 1]].Y == y)
+                    {
                         ++prevMaxInd;
+                    }
                 }
 
                 AET.Sort();
@@ -86,8 +87,8 @@ namespace GK2_TrianglesFiller.GeometryRes
 
         public AETPointer(double yMax, double x, double m)
         {
-            this.yMax = (int)Math.Round(yMax);
-            this.x = (int)Math.Round(x);
+            this.yMax = (int)yMax;
+            this.x = (int)x;
             _m = 1.0 / m;
             accumulation = 0.0d;
         }
@@ -95,7 +96,7 @@ namespace GK2_TrianglesFiller.GeometryRes
         public void UpdateX()
         {
             accumulation += _m;
-            int val = (int)Math.Round(accumulation);
+            int val = (int)accumulation;
             if (val != 0)
             {
                 accumulation = 0.0d;

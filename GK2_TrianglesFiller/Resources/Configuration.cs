@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace GK2_TrianglesFiller.Resources
 {
@@ -12,11 +7,12 @@ namespace GK2_TrianglesFiller.Resources
         public const bool DrawVertices = false;
 
         public const double VertexRadius = 5.0;
-        public const double TriangleSideLength = 120.0;
-        public const double CanvasMargin = 0;
+        public const double SideLength = 120.0;
         public const double DPI = 96;
         public static Brush VertexBrush = Brushes.Black;
         public static Pen VertexPen = new Pen(VertexBrush, 1.0);
+        public static PixelFormat pixelFormat = PixelFormats.Bgr32;
+        public static int bytesPerPixel = pixelFormat.BitsPerPixel / 8;
 
         static Configuration()
         {

@@ -1,40 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using GK2_TrianglesFiller.GeometryRes;
-using GK2_TrianglesFiller.Resources;
 
 namespace GK2_TrianglesFiller.VertexRes
 {
     class Vertex : IComparable<Vertex>
     {
         public bool Locked { get; set; }
-        public EllipseGeometry Ellipse { get; }
 
         public List<LineGeometry> Lines { get; }
         public List<LineGeometry> ReverseLines { get; }
 
+        private Point point;
         public Point Point
         {
-            get => Ellipse.Center;
+            get => point;
             set
             {
                 if (!Locked)
                 {
-                    Ellipse.Center = value;
+                    point = value;
                     Lines.ForEach((line) => line.StartPoint = value);
                     ReverseLines.ForEach((line) => line.EndPoint = value);
                 }
             }
         }
-        public double X { get => Point.X; }
-        public double Y { get => Point.Y; }
+        public double X { get => point.X; }
+        public double Y { get => point.Y; }
 
         public Vertex(Point point)
         {
-            Ellipse = new EllipseGeometry(point, Configuration.VertexRadius, Configuration.VertexRadius);
+            this.point = point;
             Lines = new List<LineGeometry>();
             ReverseLines = new List<LineGeometry>();
         }
@@ -53,7 +50,7 @@ namespace GK2_TrianglesFiller.VertexRes
         {
             if (!Locked)
             {
-                Ellipse.Center.Offset(x, y);
+                point.Offset(x, y);
                 Lines.ForEach((line) => line.StartPoint.Offset(x, y));
                 ReverseLines.ForEach((line) => line.EndPoint.Offset(x, y));
             }
@@ -80,21 +77,21 @@ namespace GK2_TrianglesFiller.VertexRes
 
         public int CompareTo(Vertex other)
         {
-            return Point.X - other.Point.X < GeometryRes.Geometry.Eps ?
-               Point.Y.CompareTo(other.Point.Y) :
-                Point.X.CompareTo(other.Point.X);
+            return point.X - other.point.X < GeometryRes.Geometry.Eps ?
+               point.Y.CompareTo(other.point.Y) :
+                point.X.CompareTo(other.point.X);
         }
 
         public override bool Equals(object obj)
         {
             return obj is Vertex vertex &&
-                   Point.Equals(vertex.Point);
+                   point.Equals(vertex.point);
         }
 
         public override int GetHashCode()
         {
             var hashCode = -1667306863;
-            hashCode = hashCode * -1521134295 + Point.GetHashCode();
+            hashCode = hashCode * -1521134295 + point.GetHashCode();
             return hashCode;
         }
     };

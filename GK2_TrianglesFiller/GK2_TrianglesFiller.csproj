@@ -27,6 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
@@ -97,9 +99,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DrawingRes\Background.cs" />
+    <Compile Include="DrawingHost.cs" />
     <Compile Include="DrawingRes\TriangleGrid.cs" />
-    <Compile Include="DrawingRes\TriangleDrawing.cs" />
-    <Compile Include="DrawingRes\VisualHost.cs" />
     <Compile Include="GeometryRes\PointGeometry.cs" />
     <Compile Include="GeometryRes\ScanLine.cs" />
     <Compile Include="Resources\Configuration.cs" />
