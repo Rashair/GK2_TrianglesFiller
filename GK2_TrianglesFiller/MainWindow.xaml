@@ -31,7 +31,7 @@
 
                     <StackPanel Grid.Column="1" Grid.Row="0">
                         <Label Content="Object color" Height="30" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <xctk:ColorPicker x:Name="ObjectColorPicker" Padding="0,0,-1,0" Margin="90,10,90,10" Background="White" SelectedColor="White" SelectedColorChanged="ObjectColorPicker_SelectedColorChanged" />
+                        <xctk:ColorPicker x:Name="ObjectColorPicker" Padding="0,0,-1,0" Margin="90,10,90,10" Background="White" SelectedColor="Green" SelectedColorChanged="ObjectColorPicker_SelectedColorChanged" />
                         <Button x:Name="ObjectColorFileButton" Content="Choose picture" Margin="70,10,70,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" />
                     </StackPanel>
 
@@ -93,6 +93,6 @@
             </TabItem>
         </Controls:MetroTabControl>
 
-        <Canvas x:Name="MyCanvas" Margin="50,50,50,50" Background="White" UseLayoutRounding="True" />
+        <Canvas x:Name="MyCanvas" Margin="50,50,50,50" Background="White" UseLayoutRounding="True" ClipToBounds="True" SnapsToDevicePixels="True" />
     </DockPanel>
 </Controls:MetroWindow>

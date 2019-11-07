@@ -6,7 +6,7 @@ namespace GK2_TrianglesFiller.GeometryRes
 {
     static class Geometry
     {
-        public const double Eps = 1e-6;
+        public const double Eps = 1e-10;
 
         public static double Atan2_2PI(int y, int x)
         {

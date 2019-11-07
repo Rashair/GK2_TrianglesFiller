@@ -11,15 +11,12 @@ namespace GK2_TrianglesFiller.DrawingRes
 {
     class TriangleGrid
     {
-        private Rect rect;
         private List<List<Vertex>> grid;
 
         public TriangleGrid(Rect rect)
         {
-            this.rect = rect;
             Drawing = new DrawingGroup();
-
-            InitializeGrid();
+            InitializeGrid(rect);
         }
 
         public int Rows { get => Grid.Count; }
@@ -27,37 +24,7 @@ namespace GK2_TrianglesFiller.DrawingRes
         public List<List<Vertex>> Grid { get => grid; }
         public DrawingGroup Drawing { get; }
 
-        public Vertex FindVertex(Point pos)
-        {
-            int row = (int)Math.Floor(pos.Y / SideLength);
-            int col = (int)Math.Floor(pos.X / SideLength);
-            if (row > Rows || col > Cols || row < 0 || col < 0)
-            {
-                return null;
-            }
-
-            return pos.ArePointsIntersecting(Grid[row][col]) ? Grid[row][col] :
-                    pos.ArePointsIntersecting(Grid[row + 1][col]) ? Grid[row + 1][col] :
-                    pos.ArePointsIntersecting(Grid[row][col + 1]) ? Grid[row][col + 1] :
-                    pos.ArePointsIntersecting(Grid[row + 1][col + 1]) ? Grid[row + 1][col + 1] :
-                    SearchAll(pos);
-        }
-
-        private Vertex SearchAll(Point pos)
-        {
-            for (int i = 0; i < Grid.Count; ++i)
-            {
-                var closest = Grid[i].FirstOrDefault(v => pos.ArePointsIntersecting(v));
-                if (closest != null)
-                {
-                    return closest;
-                }
-            }
-
-            return null;
-        }
-
-        private void InitializeGrid()
+        private void InitializeGrid(Rect rect)
         {
             int rows = (int)Math.Floor(rect.Height / SideLength);
             int cols = (int)Math.Floor(rect.Width / SideLength);
@@ -106,5 +73,36 @@ namespace GK2_TrianglesFiller.DrawingRes
                 }
             }
         }
+
+        public Vertex FindVertex(Point pos)
+        {
+            int row = (int)Math.Floor(pos.Y / SideLength);
+            int col = (int)Math.Floor(pos.X / SideLength);
+            if (row >= Rows || col >= Cols || row < 0 || col < 0)
+            {
+                return null;
+            }
+
+            return pos.ArePointsIntersecting(Grid[row][col]) ? Grid[row][col] :
+                   row < Rows - 1 && pos.ArePointsIntersecting(Grid[row + 1][col]) ? Grid[row + 1][col] :
+                   col < Cols - 1 && pos.ArePointsIntersecting(Grid[row][col + 1]) ? Grid[row][col + 1] :
+                   row < Rows - 1 && col < Cols - 1 && pos.ArePointsIntersecting(Grid[row + 1][col + 1]) ? Grid[row + 1][col + 1] :
+                   SearchAll(pos);
+        }
+
+        private Vertex SearchAll(Point pos)
+        {
+            for (int i = 0; i < Grid.Count; ++i)
+            {
+                var closest = Grid[i].FirstOrDefault(v => pos.ArePointsIntersecting(v));
+                if (closest != null)
+                {
+                    return closest;
+                }
+            }
+
+            return null;
+        }
+
     }
 }

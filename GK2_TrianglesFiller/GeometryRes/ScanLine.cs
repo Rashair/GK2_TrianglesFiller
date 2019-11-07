@@ -2,21 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 
 namespace GK2_TrianglesFiller.GeometryRes
 {
     class ScanLine
     {
-        private List<AETPointer> AET;
+        private HashSet<AETPointer> AET;
         private readonly int[] sortedInd;
-        private List<Vertex> polygon;
+        private List<Point> polygon;
 
-        public ScanLine(List<Vertex> polygon)
+        public ScanLine(List<Point> polygon)
         {
-            AET = new List<AETPointer>();
+            AET = new HashSet<AETPointer>();
             sortedInd = Enumerable.Range(0, polygon.Count).ToArray();
             this.polygon = polygon;
-            Array.Sort(polygon.ToArray(), sortedInd, Comparer<Vertex>.Create((v1, v2) => v1.Y.CompareTo(v2.Y)));
+            Array.Sort(polygon.ToArray(), sortedInd, Comparer<Point>.Create((v1, v2) => v1.Y.CompareTo(v2.Y)));
         }
 
         public IEnumerable<(List<int> xList, int y)> GetIntersectionPoints()
@@ -50,14 +51,15 @@ namespace GK2_TrianglesFiller.GeometryRes
                             AET.Remove(new AETPointer(prev.Y, prev.X, 1));
                         }
 
+
                         var next = polygon[(ind + 1) % polygon.Count];
                         if (next.Y >= current.Y)
                         {
-                            AET.Add(new AETPointer(next.Y, next.X, PointGeometry.Slope(current, next)));
+                            AET.Add(new AETPointer(next.Y, current.X, PointGeometry.Slope(current, next)));
                         }
                         else
                         {
-                            AET.Remove(new AETPointer(next.Y, next.X, 1));
+                            AET.Remove(new AETPointer(next.Y, current.X, 1));
                         }
                     }
 
@@ -69,11 +71,13 @@ namespace GK2_TrianglesFiller.GeometryRes
                     }
                 }
 
-                AET.Sort();
-                yield return (AET.Select(ptr => ptr.x).ToList(), y);
+                yield return (AET.Select(ptr => ptr.X).OrderBy(x => x).ToList(), y);
 
-                AET.ForEach((ptr) => ptr.UpdateX());
-                AET.RemoveAll((ptr) => ptr.yMax == y);
+                foreach (var ptr in AET)
+                {
+                    ptr.UpdateX();
+                }
+                AET.RemoveWhere((ptr) => ptr.yMax == y);
             }
         }
     }
@@ -81,33 +85,44 @@ namespace GK2_TrianglesFiller.GeometryRes
     class AETPointer : IComparable<AETPointer>
     {
         public int yMax;
-        public int x;
+        public double x;
         public double _m;
-        public double accumulation;
 
         public AETPointer(double yMax, double x, double m)
         {
             this.yMax = (int)yMax;
             this.x = (int)x;
             _m = 1.0 / m;
-            accumulation = 0.0d;
         }
+
+        public int X { get => (int)x; }
 
         public void UpdateX()
         {
-            accumulation += _m;
-            int val = (int)accumulation;
-            if (val != 0)
-            {
-                accumulation = 0.0d;
-                x += val;
-            }
+            x += _m;
         }
 
         public int CompareTo(AETPointer other)
         {
             var xCmp = x.CompareTo(other.x);
             return xCmp == 0 ? yMax.CompareTo(other.yMax) : xCmp;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is AETPointer pointer &&
+                   yMax == pointer.yMax &&
+                   X == pointer.X &&
+                   (int)_m == (int)pointer._m;
+        }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 1999727083;
+            hashCode = hashCode * -1521134295 + yMax.GetHashCode();
+            hashCode = hashCode * -1521134295 + x.GetHashCode();
+            hashCode = hashCode * -1521134295 + _m.GetHashCode();
+            return hashCode;
         }
     }
 }

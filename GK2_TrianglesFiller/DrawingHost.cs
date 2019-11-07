@@ -25,20 +25,20 @@ namespace GK2_TrianglesFiller
 
         public DrawingHost(Rect rect, Color color)
         {
-            this.Rect = rect;
             this.MouseDown += Host_MouseDown;
             this.MouseMove += Host_MouseMove;
             this.MouseUp += Host_MouseUp;
-
             backingStore = new DrawingGroup();
-            triangleGrid = new TriangleGrid(Rect);
 
+            triangleGrid = new TriangleGrid(rect);
             realHeight = (triangleGrid.Rows - 1) * SideLength;
             realWidth = (triangleGrid.Cols - 1) * SideLength;
-            currentColor = color;
+            this.Rect = new Rect(rect.Left, rect.Top, realWidth, realHeight);
 
-            WriteableBitmap bitmap = new WriteableBitmap((int)Rect.Width, (int)Rect.Height, DPI, DPI, pixelFormat, null);
+            WriteableBitmap bitmap = new WriteableBitmap((int)realWidth, (int)realHeight, DPI, DPI, pixelFormat, null);
             background = new Background(bitmap, triangleGrid.Grid, Rect);
+
+            currentColor = color;
             background.FillGrid(currentColor);
         }
 
@@ -97,7 +97,10 @@ namespace GK2_TrianglesFiller
         private void Render(DrawingContext drawingContext)
         {
             drawingContext.DrawDrawing(background.Drawing);
-            drawingContext.DrawDrawing(triangleGrid.Drawing);
+            if (DrawGrid)
+            {
+                drawingContext.DrawDrawing(triangleGrid.Drawing);
+            }
         }
 
 
