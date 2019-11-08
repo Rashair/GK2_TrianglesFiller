@@ -39,7 +39,7 @@ namespace GK2_TrianglesFiller
             background = new Background(bitmap, triangleGrid.Grid, Rect);
 
             currentColor = Colors.Yellow;
-            currentColorBitmap = GetScaledImage(new BitmapImage(DeafultImagePath));
+            currentColorBitmap = GetScaledImage(DefaultImage);
             background.FillGrid(currentColorBitmap);
         }
 

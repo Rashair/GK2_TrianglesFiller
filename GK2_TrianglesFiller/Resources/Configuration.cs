@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace GK2_TrianglesFiller.Resources
 {
@@ -9,7 +10,7 @@ namespace GK2_TrianglesFiller.Resources
         public static bool DrawGrid = true;
 
         public static bool ObjectColorFromTexture = true;
-        public static Uri DeafultImagePath = new Uri(@"pack://application:,,,/Resources/wallpaper.png");
+        public static BitmapImage DefaultImage = new BitmapImage(new Uri(@"pack://application:,,,/Resources/wallpaper.png"));
 
         public const double SideLength = 120;
 
@@ -31,6 +32,10 @@ namespace GK2_TrianglesFiller.Resources
             if (VertexPen.CanFreeze)
             {
                 VertexPen.Freeze();
+            }
+            if (DefaultImage.CanFreeze)
+            {
+                DefaultImage.Freeze();
             }
         }
     }

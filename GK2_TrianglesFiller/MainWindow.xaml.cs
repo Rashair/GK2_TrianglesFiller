@@ -1,6 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -50,14 +51,32 @@ namespace GK2_TrianglesFiller
 
             OpenFileDialog dlg = new OpenFileDialog
             {
+                // TODO: other extensions
                 Filter = "Images (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png"
             };
 
             bool? result = dlg.ShowDialog();
             if (result == true)
             {
-                string filename = dlg.FileName;
-                BitmapImage img = new BitmapImage(new Uri(filename));
+                string fileName = dlg.FileName;
+                BitmapImage img;
+                if (fileName.EndsWith("png"))
+                {
+                    img = new BitmapImage(new Uri(fileName));
+                    img.Freeze();
+                }
+                else
+                {
+                    using Stream bmpStream = File.Open(fileName, FileMode.Open);
+                    {
+                        img = new BitmapImage();
+                        img.BeginInit();
+                        img.StreamSource = bmpStream;
+                        img.CacheOption = BitmapCacheOption.OnLoad;
+                        img.EndInit();
+                        img.Freeze();
+                    }
+                }
                 host.SetBackground(img);
             }
 
@@ -65,7 +84,7 @@ namespace GK2_TrianglesFiller
 
         private void ResetButton_Click(object sender, RoutedEventArgs e)
         {
-            host.SetBackground(new BitmapImage(DeafultImagePath));
+            host.SetBackground(DefaultImage);
         }
 
         private void CheckBox_Changed(object sender, RoutedEventArgs e)
