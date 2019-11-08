@@ -18,12 +18,12 @@ namespace GK2_TrianglesFiller
         public Rect Rect { get; }
         private double realHeight;
         private double realWidth;
+        private Vertex currentlyHeld;
 
-        private Vertex currentlyHold;
         private Color currentColor;
+        private BitmapSource currentColorBitmap;
 
-
-        public DrawingHost(Rect rect, Color color)
+        public DrawingHost(Rect rect)
         {
             this.MouseDown += Host_MouseDown;
             this.MouseMove += Host_MouseMove;
@@ -38,15 +38,16 @@ namespace GK2_TrianglesFiller
             WriteableBitmap bitmap = new WriteableBitmap((int)realWidth, (int)realHeight, DPI, DPI, GK2_TrianglesFiller.Resources.Configuration.PixelFormat, null);
             background = new Background(bitmap, triangleGrid.Grid, Rect);
 
-            currentColor = color;
-            background.FillGrid(currentColor);
+            currentColor = Colors.Yellow;
+            currentColorBitmap = GetScaledImage(new BitmapImage(DeafultImagePath));
+            background.FillGrid(currentColorBitmap);
         }
 
         private void Host_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var pos = e.GetPosition(this);
-            currentlyHold = triangleGrid.FindVertex(pos);
-            if (currentlyHold != null)
+            currentlyHeld = triangleGrid.FindVertex(pos);
+            if (currentlyHeld != null)
             {
                 Mouse.Capture(this);
                 background.Clear();
@@ -55,28 +56,28 @@ namespace GK2_TrianglesFiller
 
         private void Host_MouseMove(object sender, MouseEventArgs e)
         {
-            if (currentlyHold != null)
+            if (currentlyHeld != null)
             {
                 var currPos = e.GetPosition(this);
                 if (currPos.X < realWidth && currPos.Y < realHeight && currPos.X > Rect.Left && currPos.Y > Rect.Top)
                 {
-                    currentlyHold.Point = currPos;
+                    currentlyHeld.Point = currPos;
                 }
             }
         }
 
         private void Host_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if (currentlyHold != null)
+            if (currentlyHeld != null)
             {
                 var currPos = e.GetPosition(this);
                 Mouse.Capture(null);
                 if (currPos.X < realWidth && currPos.Y < realHeight && currPos.X > Rect.Left && currPos.Y > Rect.Top)
                 {
-                    currentlyHold.Point = currPos;
+                    currentlyHeld.Point = currPos;
                 }
-                currentlyHold = null;
-                UpdateBackground(currentColor);
+                currentlyHeld = null;
+                UpdateBackground();
             }
         }
 
@@ -103,19 +104,36 @@ namespace GK2_TrianglesFiller
             }
         }
 
-
-        public void UpdateBackground(Color color)
+        public void UpdateBackground()
         {
-            currentColor = color;
-            background.FillGrid(color);
+            if (ObjectColorFromTexture)
+            {
+                background.FillGrid(currentColorBitmap);
+            }
+            else
+            {
+                background.FillGrid(currentColor);
+            }
             Render();
         }
 
-        public void UpdateBackground(BitmapImage image)
+        public void SetBackground(Color color)
         {
-            var scaledImg = new TransformedBitmap(image, new ScaleTransform(realWidth / image.PixelWidth, realHeight / image.PixelHeight));
-            background.FillGrid(scaledImg);
-            Render();
+            ObjectColorFromTexture = false;
+            currentColor = color;
+            UpdateBackground();
+        }
+
+        public void SetBackground(BitmapImage image)
+        {
+            ObjectColorFromTexture = true;
+            currentColorBitmap = GetScaledImage(image);
+            UpdateBackground();
+        }
+
+        private TransformedBitmap GetScaledImage(BitmapImage image)
+        {
+            return new TransformedBitmap(image, new ScaleTransform(realWidth / image.PixelWidth, realHeight / image.PixelHeight));
         }
     }
 }

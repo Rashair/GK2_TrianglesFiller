@@ -39,11 +39,11 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
-        public void FillGrid(TransformedBitmap img)
+        public void FillGrid(BitmapSource img)
         {
-            //IntPtr[] arr = new IntPtr[img.PixelWidth * img.PixelHeight];
-            //img.CopyPixels(arr, bitmap.BackBufferStride, 0);
-            //bitmap.WritePixels(img.SourceRect, arr, bitmap.BackBufferStride, 0);
+            uint[] arr = new uint[img.PixelWidth * img.PixelHeight];
+            img.CopyPixels(arr, img.PixelWidth * BytesPerPixel, 0);
+            bitmap.WritePixels(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight), arr, bitmap.PixelWidth * BytesPerPixel, 0);
         }
 
         public void FillGrid(Color color)

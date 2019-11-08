@@ -14,7 +14,7 @@
     <Window.Resources>
         <ObjectDataProvider x:Key="configuration" ObjectType="{x:Type resources:Configuration}"></ObjectDataProvider>
     </Window.Resources>
-    
+
     <DockPanel x:Name="MainPanel">
         <Controls:MetroTabControl Width="291" HorizontalAlignment="Left">
             <TabItem Header="Configuration" HorizontalAlignment="Left" Width="192" Margin="0,0,-87,0">
@@ -34,11 +34,25 @@
                         <RowDefinition Height="100*"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="1" Grid.Row="0">
-                        <Label Content="Object color" Height="30" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <xctk:ColorPicker x:Name="ObjectColorPicker" Padding="0,0,-1,0" Margin="90,10,90,10" Background="White" SelectedColor="Green" SelectedColorChanged="ObjectColorPicker_SelectedColorChanged" />
-                        <Button x:Name="ObjectColorFileButton" Content="Choose picture" Margin="70,10,70,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" Click="ObjectColorFileButton_Click" />
-                    </StackPanel>
+                    <Grid Grid.Column="1" Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition Width="4*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="3*" />
+                            <RowDefinition Height="2*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Label Grid.ColumnSpan="2" Content="Object color" Height="30" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
+                        <xctk:ColorPicker Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Padding="0,0,-1,0"  Background="White"
+                                          x:Name="ObjectColorPicker" SelectedColorChanged="ObjectColorPicker_SelectedColorChanged" Margin="75,0,74,0" Height="26" VerticalAlignment="Bottom" />
+
+                        <Button  Grid.Row="2"  Grid.Column="1" x:Name="ObjectColorFileButton" Content="Choose picture"  Controls:ControlsHelper.ContentCharacterCasing="Normal" Click="ObjectColorFileButton_Click" Margin="10,5,10,0" />
+                        <Button  Grid.Row="2"  Grid.Column="2" x:Name="ResetButton" Content="Reset" Controls:ControlsHelper.ContentCharacterCasing="Normal" Margin="10,5,10,0" Height="26" VerticalAlignment="Top" Click="ResetButton_Click"/>
+                    </Grid>
 
                     <DockPanel Grid.Column="1" Grid.Row="1">
                         <Label Content="Light color" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
