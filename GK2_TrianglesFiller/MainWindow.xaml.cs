@@ -1,7 +1,10 @@
 ﻿using MahApps.Metro.Controls;
+using Microsoft.Win32;
 using System;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller
 {
@@ -27,7 +30,6 @@ namespace GK2_TrianglesFiller
 
         private DrawingHost host;
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -44,6 +46,36 @@ namespace GK2_TrianglesFiller
             if (host != null)
             {
                 host.UpdateBackground(e.NewValue.Value);
+            }
+        }
+
+        private void ObjectColorFileButton_Click(object sender, RoutedEventArgs e)
+        {
+            if(host != null)
+            {
+                OpenFileDialog dlg = new OpenFileDialog
+                {
+                    DefaultExt = ".png", // Default file extension
+                    Filter = "Images |*.png" // Filter files by extension
+                };
+
+
+                bool? result = dlg.ShowDialog();
+                if (result == true)
+                {
+                    string filename = dlg.FileName;
+                    BitmapImage img = new BitmapImage(new Uri(filename));
+                    host.UpdateBackground(img);
+                }
+            }
+        }
+
+        private void CheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            if (host != null)
+            {
+                DrawGrid = drawGridCheck.IsChecked.Value;
+                host.Render();
             }
         }
     }

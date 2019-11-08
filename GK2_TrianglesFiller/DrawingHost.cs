@@ -35,7 +35,7 @@ namespace GK2_TrianglesFiller
             realWidth = (triangleGrid.Cols - 1) * SideLength;
             this.Rect = new Rect(rect.Left, rect.Top, realWidth, realHeight);
 
-            WriteableBitmap bitmap = new WriteableBitmap((int)realWidth, (int)realHeight, DPI, DPI, pixelFormat, null);
+            WriteableBitmap bitmap = new WriteableBitmap((int)realWidth, (int)realHeight, DPI, DPI, GK2_TrianglesFiller.Resources.Configuration.PixelFormat, null);
             background = new Background(bitmap, triangleGrid.Grid, Rect);
 
             currentColor = color;
@@ -87,7 +87,7 @@ namespace GK2_TrianglesFiller
             drawingContext.DrawDrawing(backingStore);
         }
 
-        private void Render()
+        public void Render()
         {
             var drawingContext = backingStore.Open();
             Render(drawingContext);
@@ -108,6 +108,13 @@ namespace GK2_TrianglesFiller
         {
             currentColor = color;
             background.FillGrid(color);
+            Render();
+        }
+
+        public void UpdateBackground(BitmapImage image)
+        {
+            var scaledImg = new TransformedBitmap(image, new ScaleTransform(realWidth / image.PixelWidth, realHeight / image.PixelHeight));
+            background.FillGrid(scaledImg);
             Render();
         }
     }

@@ -39,11 +39,11 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
-        public void FillGrid(BitmapImage img)
+        public void FillGrid(TransformedBitmap img)
         {
             //IntPtr[] arr = new IntPtr[img.PixelWidth * img.PixelHeight];
-            //img.CopyPixels(arr, 0, 0);
-            //bitmap.WritePixels(img.SourceRect, arr, 0, 0);
+            //img.CopyPixels(arr, bitmap.BackBufferStride, 0);
+            //bitmap.WritePixels(img.SourceRect, arr, bitmap.BackBufferStride, 0);
         }
 
         public void FillGrid(Color color)
@@ -76,7 +76,7 @@ namespace GK2_TrianglesFiller.DrawingRes
             uint colorVal = ((uint)color.A << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | (color.B);
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
-                if (y >= bitmap.PixelHeight)
+                if (y == bitmap.PixelHeight)
                 {
                     continue;
                 }
@@ -84,15 +84,15 @@ namespace GK2_TrianglesFiller.DrawingRes
                 IntPtr pBackBuffer = bitmap.BackBuffer + y * bitmap.BackBufferStride;
                 for (int i = 0; i < xList.Count - 1; i += 2)
                 {
-                    pBackBuffer += xList[i] * bytesPerPixel;
-                    int endCol = Math.Min(xList[i + 1], bitmap.PixelWidth);
+                    pBackBuffer += xList[i] * BytesPerPixel;
+                    int endCol = Math.Min(xList[i + 1] + 1, bitmap.PixelWidth);
                     for (int x = xList[i]; x < endCol; ++x)
                     {
                         unsafe
                         {
                             *((uint*)pBackBuffer) = colorVal;
                         }
-                        pBackBuffer += bytesPerPixel;
+                        pBackBuffer += BytesPerPixel;
                     }
                 }
             }

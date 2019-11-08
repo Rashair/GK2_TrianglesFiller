@@ -6,11 +6,16 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:GK2_TrianglesFiller"
         xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-    xmlns:drawingres="clr-namespace:GK2_TrianglesFiller.DrawingRes" x:Class="GK2_TrianglesFiller.MainWindow"
+        xmlns:drawingres="clr-namespace:GK2_TrianglesFiller.DrawingRes" 
+        xmlns:resources="clr-namespace:GK2_TrianglesFiller.Resources" 
+        x:Class="GK2_TrianglesFiller.MainWindow"
         mc:Ignorable="d" Name="MyWindow"
         Title="Triangles filler" Height="900" Width="1600" MinWidth="640" MinHeight="360" WindowStartupLocation="CenterScreen" Loaded="MyWindow_Loaded">
+    <Window.Resources>
+        <ObjectDataProvider x:Key="configuration" ObjectType="{x:Type resources:Configuration}"></ObjectDataProvider>
+    </Window.Resources>
+    
     <DockPanel x:Name="MainPanel">
-
         <Controls:MetroTabControl Width="291" HorizontalAlignment="Left">
             <TabItem Header="Configuration" HorizontalAlignment="Left" Width="192" Margin="0,0,-87,0">
                 <Grid OpacityMask="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" Background="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" Margin="0,10,0,0" >
@@ -26,13 +31,13 @@
                         <RowDefinition Height="90*" />
                         <RowDefinition Height="105*"/>
                         <RowDefinition Height="150*"/>
-                        <RowDefinition Height="20*"/>
+                        <RowDefinition Height="100*"/>
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Column="1" Grid.Row="0">
                         <Label Content="Object color" Height="30" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
                         <xctk:ColorPicker x:Name="ObjectColorPicker" Padding="0,0,-1,0" Margin="90,10,90,10" Background="White" SelectedColor="Green" SelectedColorChanged="ObjectColorPicker_SelectedColorChanged" />
-                        <Button x:Name="ObjectColorFileButton" Content="Choose picture" Margin="70,10,70,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" />
+                        <Button x:Name="ObjectColorFileButton" Content="Choose picture" Margin="70,10,70,10" Controls:ControlsHelper.ContentCharacterCasing="Normal" Click="ObjectColorFileButton_Click" />
                     </StackPanel>
 
                     <DockPanel Grid.Column="1" Grid.Row="1">
@@ -87,12 +92,24 @@
 
                         <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{Binding Path=Factors[1], Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors2" Content="Random for each"  HorizontalAlignment="Left"  />
                     </Grid>
-
+                    <Grid Grid.Column="1" Grid.Row="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="10*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="1" Content="Other" VerticalAlignment="Center" FontSize="18"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                        <CheckBox Grid.Column="1" Grid.Row="1" Name="drawGridCheck" IsChecked="True" Content="Draw grid"
+                                  Checked="CheckBox_Changed" Unchecked="CheckBox_Changed"/>
+                    </Grid>
                 </Grid>
 
             </TabItem>
         </Controls:MetroTabControl>
 
-        <Canvas x:Name="MyCanvas" Margin="50,50,50,50" Background="White" UseLayoutRounding="True" ClipToBounds="True" SnapsToDevicePixels="True" />
+        <Canvas x:Name="MyCanvas" Margin="50,50,50,50" Background="White" />
     </DockPanel>
 </Controls:MetroWindow>

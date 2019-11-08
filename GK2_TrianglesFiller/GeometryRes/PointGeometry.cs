@@ -66,7 +66,7 @@ namespace GK2_TrianglesFiller.GeometryRes
 
         public static double Slope(Point p1, Point p2)
         {
-            return (p1.X - p2.X) < Geometry.Eps ? double.MaxValue : (p2.Y - p1.Y) / (p2.X - p1.X);
+            return Math.Abs(p1.X - p2.X) < Geometry.Eps ? Geometry.Infinity : (p2.Y - p1.Y) / (p2.X - p1.X);
         }
     }
 }
