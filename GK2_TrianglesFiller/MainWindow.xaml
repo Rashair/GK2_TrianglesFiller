@@ -56,7 +56,8 @@
 
                     <DockPanel Grid.Column="1" Grid.Row="1">
                         <Label Content="Light color" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <xctk:ColorPicker HorizontalAlignment="Center" Width="50" Padding="0,0,-1,0" Margin="10,10,10,10" UseLayoutRounding="False"/>
+                        <xctk:ColorPicker HorizontalAlignment="Center" Width="50" Padding="0,0,-1,0" Margin="10,10,10,10" UseLayoutRounding="False" 
+                                          x:Name="LightColorPicker" SelectedColor="White" SelectedColorChanged="LightColorPicker_SelectedColorChanged"/>
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="2">
                         <Label Content="Light versor" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>

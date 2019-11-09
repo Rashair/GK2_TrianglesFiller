@@ -92,5 +92,14 @@ namespace GK2_TrianglesFiller
             DrawGrid = drawGridCheck.IsChecked.Value;
             host?.Render();
         }
+
+        private void LightColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (e.NewValue.HasValue)
+            {
+                LightColor = e.NewValue.Value;
+                host?.UpdateBackground();
+            }
+        }
     }
 }

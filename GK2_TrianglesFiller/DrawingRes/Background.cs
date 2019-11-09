@@ -2,7 +2,6 @@
 using GK2_TrianglesFiller.VertexRes;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -50,13 +49,20 @@ namespace GK2_TrianglesFiller.DrawingRes
         public void FillGrid(BitmapSource img)
         {
             img.CopyPixels(buffer, bitmap.BackBufferStride, 0);
+            for (int i = 0; i < buffer.Length; i += 4)
+            {
+                var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i]);
+                buffer[i] = B;
+                buffer[i + 1] = G;
+                buffer[i + 2] = R;
+            }
             FillGridFromBuffer();
         }
 
         public void FillGrid(Color color)
         {
             byte[] cValues = color.GetByteValue();
-            for (int i = 0; i < buffer.Length; i += BytesPerPixel)
+            for (int i = 0; i < buffer.Length; i += 4)
             {
                 buffer[i] = cValues[0];
                 buffer[i + 1] = cValues[1];
@@ -104,15 +110,7 @@ namespace GK2_TrianglesFiller.DrawingRes
                 {
                     int width = Math.Min(xList[i + 1], bitmap.PixelWidth) - xList[i];
                     bitmap.WritePixels(new Int32Rect(xList[i], y, width, 1), buffer, bitmap.BackBufferStride, y * bitmap.BackBufferStride + xList[i] * BytesPerPixel);
-                    //for (int x = xList[i]; x < endCol; ++x)
-                    //{
-                    //    unsafe
-                    //    {
-                    //        *((int*)pBackBuffer) = buffer[shift + x];
-                    //    }
 
-                    //    pBackBuffer += BytesPerPixel;
-                    //}
                 }
             }
         }
