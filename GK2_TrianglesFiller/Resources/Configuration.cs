@@ -16,7 +16,7 @@ namespace GK2_TrianglesFiller.Resources
 
         public const double DPI = 96;
         public static PixelFormat PixelFormat = PixelFormats.Bgra32;
-        public readonly static int BytesPerPixel = (PixelFormat.BitsPerPixel) / 8;
+        public static readonly int BytesPerPixel = (PixelFormat.BitsPerPixel + 7) / 8;
 
         public const double VertexRadius = 5.0;
         public static Brush VertexBrush = Brushes.Black;

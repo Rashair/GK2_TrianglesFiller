@@ -101,6 +101,7 @@
     </ApplicationDefinition>
     <Compile Include="DrawingRes\Background.cs" />
     <Compile Include="DrawingHost.cs" />
+    <Compile Include="DrawingRes\ColorGenerator.cs" />
     <Compile Include="DrawingRes\TriangleGrid.cs" />
     <Compile Include="GeometryRes\PointGeometry.cs" />
     <Compile Include="GeometryRes\ScanLine.cs" />

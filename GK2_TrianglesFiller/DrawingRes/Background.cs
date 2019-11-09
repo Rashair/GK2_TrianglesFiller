@@ -2,6 +2,7 @@
 using GK2_TrianglesFiller.VertexRes;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -9,11 +10,15 @@ using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller.DrawingRes
 {
+
     class Background
     {
         private readonly List<List<Vertex>> grid;
         private readonly DrawingGroup drawingGroup;
         private readonly WriteableBitmap bitmap;
+
+        private readonly byte[] buffer;
+        private readonly Int32Rect dirtyRect;
 
         public Background(WriteableBitmap bitmap, List<List<Vertex>> grid, Rect rect)
         {
@@ -21,6 +26,9 @@ namespace GK2_TrianglesFiller.DrawingRes
             Rect = rect;
             this.grid = grid;
             this.bitmap = bitmap;
+
+            buffer = new byte[bitmap.PixelHeight * bitmap.BackBufferStride];
+            dirtyRect = new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight);
 
             Clear();
         }
@@ -41,12 +49,25 @@ namespace GK2_TrianglesFiller.DrawingRes
 
         public void FillGrid(BitmapSource img)
         {
-            uint[] arr = new uint[img.PixelWidth * img.PixelHeight];
-            img.CopyPixels(arr, img.PixelWidth * BytesPerPixel, 0);
-            bitmap.WritePixels(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight), arr, bitmap.PixelWidth * BytesPerPixel, 0);
+            img.CopyPixels(buffer, bitmap.BackBufferStride, 0);
+            FillGridFromBuffer();
         }
 
         public void FillGrid(Color color)
+        {
+            byte[] cValues = color.GetByteValue();
+            for (int i = 0; i < buffer.Length; i += BytesPerPixel)
+            {
+                buffer[i] = cValues[0];
+                buffer[i + 1] = cValues[1];
+                buffer[i + 2] = cValues[2];
+                buffer[i + 3] = cValues[3];
+            }
+
+            FillGridFromBuffer();
+        }
+
+        private void FillGridFromBuffer()
         {
             try
             {
@@ -56,13 +77,12 @@ namespace GK2_TrianglesFiller.DrawingRes
                     for (int j = 0; j < grid[i].Count - 1; ++j)
                     {
                         var lowerTriangle = new List<Point> { grid[i][j], grid[i + 1][j], grid[i + 1][j + 1] };
-                        FillTriangle(lowerTriangle, color);
-
+                        FillTriangle(lowerTriangle);
                         var upperTriangle = new List<Point> { grid[i][j], grid[i][j + 1], grid[i + 1][j + 1] };
-                        FillTriangle(upperTriangle, color);
+                        FillTriangle(upperTriangle);
                     }
                 }
-                bitmap.AddDirtyRect(new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                bitmap.AddDirtyRect(dirtyRect);
             }
             finally
             {
@@ -70,10 +90,9 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
-        public void FillTriangle(List<Point> triangle, Color color)
+        public void FillTriangle(List<Point> triangle)
         {
             var scanLine = new ScanLine(triangle);
-            uint colorVal = ((uint)color.A << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | (color.B);
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
                 if (y == bitmap.PixelHeight)
@@ -81,19 +100,19 @@ namespace GK2_TrianglesFiller.DrawingRes
                     continue;
                 }
 
-                IntPtr pBackBuffer = bitmap.BackBuffer + y * bitmap.BackBufferStride;
                 for (int i = 0; i < xList.Count - 1; i += 2)
                 {
-                    pBackBuffer += xList[i] * BytesPerPixel;
-                    int endCol = Math.Min(xList[i + 1] + 1, bitmap.PixelWidth);
-                    for (int x = xList[i]; x < endCol; ++x)
-                    {
-                        unsafe
-                        {
-                            *((uint*)pBackBuffer) = colorVal;
-                        }
-                        pBackBuffer += BytesPerPixel;
-                    }
+                    int width = Math.Min(xList[i + 1], bitmap.PixelWidth) - xList[i];
+                    bitmap.WritePixels(new Int32Rect(xList[i], y, width, 1), buffer, bitmap.BackBufferStride, y * bitmap.BackBufferStride + xList[i] * BytesPerPixel);
+                    //for (int x = xList[i]; x < endCol; ++x)
+                    //{
+                    //    unsafe
+                    //    {
+                    //        *((int*)pBackBuffer) = buffer[shift + x];
+                    //    }
+
+                    //    pBackBuffer += BytesPerPixel;
+                    //}
                 }
             }
         }
