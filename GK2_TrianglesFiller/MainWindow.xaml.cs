@@ -33,7 +33,7 @@ namespace GK2_TrianglesFiller
 
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
             var response = Microsoft.VisualBasic.Interaction.InputBox(
                 "Number of triangles will be roughly equal to " + MyCanvas.RenderSize.Width + "*" + MyCanvas.RenderSize.Height + " / sideLenght",
                                             "Triangle side lenght", "120");

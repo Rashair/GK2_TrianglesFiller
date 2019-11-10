@@ -1,7 +1,6 @@
 ﻿using GK2_TrianglesFiller.DrawingRes;
 using GK2_TrianglesFiller.VertexRes;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;

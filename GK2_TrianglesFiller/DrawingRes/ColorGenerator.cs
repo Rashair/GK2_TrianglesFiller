@@ -136,7 +136,7 @@ namespace GK2_TrianglesFiller.DrawingRes
                 L = GetRelativeVector(L);
                 Vector3D RVector = 2 * Vector3D.DotProduct(N, L) * N - L;
 
-                double val = (d.X * interpolationColors[i] + d.Y * interpolationColors[i + 3] + d.Z * interpolationColors[i + 6]) / (d.X + d.Y + d.Z) 
+                double val = (d.X * interpolationColors[i] + d.Y * interpolationColors[i + 3] + d.Z * interpolationColors[i + 6]) / (d.X + d.Y + d.Z)
                     * GetLightColor(i);
 
                 var cos1 = Vector3D.DotProduct(N, L);
