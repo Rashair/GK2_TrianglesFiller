@@ -1,6 +1,8 @@
 ﻿using GK2_TrianglesFiller.GeometryRes;
 using GK2_TrianglesFiller.Resources;
 using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 
@@ -49,19 +51,26 @@ namespace GK2_TrianglesFiller.DrawingRes
         }
 
         private byte[] interpolationColors = null;
-        public void SetColorsForInterpolation(byte[] colors)
+        private Vector3D[] interVectors = null;
+        private List<Point> triangle = null;
+        public void SetColorsForInterpolation(List<Point> triangle, byte[] colors, Vector3D[] normalVectors)
         {
+            this.triangle = triangle;
             // ARGB
+            for (int i = 0; i < 3; ++i)
+            {
+                var (R, G, B) = ComputeColor(colors[i], colors[i + 1], colors[i + 2], normalVectors[i]);
+                colors[i] = R;
+                colors[i + 1] = G;
+                colors[i + 2] = B;
+            }
+
             interpolationColors = colors;
+            interVectors = normalVectors;
         }
 
         public (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D? normalVectorNullable = null, Vector3D? lightVersorNullable = null)
         {
-            if (interpolationColors != null)
-            {
-                return ComputeInterpolatedColor(normalVectorNullable.Value);
-            }
-
             var N = normalVectorNullable ?? DefaultNormalVector;
             var L = lightVersorNullable ?? DefaultLightVersor;
 
@@ -84,21 +93,30 @@ namespace GK2_TrianglesFiller.DrawingRes
             return ((byte)rVal, (byte)gVal, (byte)bVal);
         }
 
-        private (byte R, byte G, byte B) ComputeInterpolatedColor(Vector3D distanceFromVertices)
+        public (byte R, byte G, byte B) ComputeInterpolatedColor(Point currPoint)
         {
-            distanceFromVertices.Normalize();
-            byte R = ComputeSingleColor(distanceFromVertices, 1);
-            byte G = ComputeSingleColor(distanceFromVertices, 2);
-            byte B = ComputeSingleColor(distanceFromVertices, 3);
+            Vector3D distanceFromVertices = GetDistanceFromVertices(currPoint);
+            byte R = ComputeSingleColor(distanceFromVertices, 0);
+            byte G = ComputeSingleColor(distanceFromVertices, 1);
+            byte B = ComputeSingleColor(distanceFromVertices, 2);
 
             return (R, G, B);
         }
 
+        private Vector3D GetDistanceFromVertices(Point currPoint)
+        {
+            return new Vector3D(PointGeometry.Distance(currPoint, triangle[0]),
+                    PointGeometry.Distance(currPoint, triangle[1]),
+                    PointGeometry.Distance(currPoint, triangle[2])
+            );
+        }
+
         private byte ComputeSingleColor(Vector3D d, int i)
         {
-            return (byte)(d.X * interpolationColors[i] +
-                            d.Y * interpolationColors[i + 3] +
-                            d.Z * interpolationColors[i + 7]);
+            return (byte)((d.X * interpolationColors[i] +
+                           d.Y * interpolationColors[i + 3] +
+                           d.Z * interpolationColors[i + 6]) 
+                           / (d.X + d.Y + d.Z));
         }
     }
 }

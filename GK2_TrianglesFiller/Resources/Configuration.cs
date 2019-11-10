@@ -34,7 +34,7 @@ namespace GK2_TrianglesFiller.Resources
         public static double Ks { get; set; } = 0.5;
         public static int M { get; set; } = 10;
 
-        public const double SideLength = 60;
+        public static double SideLength = 120;
         public const double DPI = 96;
         public static PixelFormat MyPixelFormat = PixelFormats.Bgra32;
         public static readonly int BytesPerPixel = (MyPixelFormat.BitsPerPixel + 7) / 8;

@@ -35,11 +35,11 @@ namespace GK2_TrianglesFiller
             backingStore = new DrawingGroup();
 
             triangleGrid = new TriangleGrid(rect);
-            PixelHeight = (int)((triangleGrid.Rows - 1) * SideLength);
-            PixelWidth = (int)((triangleGrid.Cols - 1) * SideLength);
+            PixelHeight = (int)((triangleGrid.Rows - 1) * SideLength) + 1;
+            PixelWidth = (int)((triangleGrid.Cols - 1) * SideLength) + 1;
             this.Rect = new Rect(rect.Left, rect.Top, PixelWidth, PixelHeight);
 
-            WriteableBitmap bitmap = new WriteableBitmap((int)PixelWidth, (int)PixelHeight, DPI, DPI, MyPixelFormat, null);
+            WriteableBitmap bitmap = new WriteableBitmap(PixelWidth, PixelHeight, DPI, DPI, MyPixelFormat, null);
             currentNormalMap = new byte[bitmap.PixelHeight * bitmap.BackBufferStride];
             background = new Background(bitmap, triangleGrid.Grid, Rect, currentNormalMap);
 
@@ -126,7 +126,7 @@ namespace GK2_TrianglesFiller
             }
             else
             {
-               background.FillGrid(currentColorBitmap);
+                background.FillGrid(currentColorBitmap);
             }
 
             Render();

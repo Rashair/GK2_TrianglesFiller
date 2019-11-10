@@ -106,12 +106,14 @@ namespace GK2_TrianglesFiller.DrawingRes
 
             if (FillColor != 1)
             {
-                List<byte> vertexColors = new List<byte>(12);
+                List<byte> vertexColors = new List<byte>(9);
                 vertexColors.AddRange(GetColorFromPoint(triangle[0]));
                 vertexColors.AddRange(GetColorFromPoint(triangle[1]));
                 vertexColors.AddRange(GetColorFromPoint(triangle[2]));
 
-                generator.SetColorsForInterpolation(vertexColors.ToArray());
+                Vector3D[] vectors = { GetVectorFromPoint(triangle[0]), GetVectorFromPoint(triangle[1]), GetVectorFromPoint(triangle[2]) };
+
+                generator.SetColorsForInterpolation(triangle, vertexColors.ToArray(), vectors);
             }
 
             return generator;
@@ -120,7 +122,13 @@ namespace GK2_TrianglesFiller.DrawingRes
         private byte[] GetColorFromPoint(Point p)
         {
             var shift = (int)p.Y * bitmap.BackBufferStride + (int)p.X * BytesPerPixel;
-            return new byte[] { buffer[shift + 3], buffer[shift + 2], buffer[shift + 1], buffer[shift] };
+            return new byte[] { buffer[shift + 2], buffer[shift + 1], buffer[shift] };
+        }
+
+        private Vector3D GetVectorFromPoint(Point p)
+        {
+            var shift = (int)p.Y * bitmap.BackBufferStride + (int)p.X * BytesPerPixel;
+            return new Vector3D(normalMap[shift + 2], normalMap[shift + 1], normalMap[shift]);
         }
 
 
@@ -130,11 +138,6 @@ namespace GK2_TrianglesFiller.DrawingRes
             var generator = GetGenerator(triangle);
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
-                if (y == bitmap.PixelHeight)
-                {
-                    continue;
-                }
-
                 FillRow(xList, y, generator);
             }
         }
@@ -149,8 +152,7 @@ namespace GK2_TrianglesFiller.DrawingRes
                 int endCol = Math.Min(xList[i + 1], bitmap.PixelWidth);
                 for (int x = xList[i]; x < endCol; ++x)
                 {
-                    var (R, G, B) = colorGenerator.ComputeColor(buffer[currShift + 2], buffer[currShift + 1], buffer[currShift],
-                        new Vector3D(normalMap[currShift + 2], normalMap[currShift + 1], normalMap[currShift]));
+                    var (R, G, B) = GetColors(colorGenerator, currShift, x, y);
                     byte A = buffer[currShift + 3];
                     unsafe
                     {
@@ -159,6 +161,19 @@ namespace GK2_TrianglesFiller.DrawingRes
                     }
                     currShift += BytesPerPixel;
                 }
+            }
+        }
+
+        private (byte R, byte G, byte B) GetColors(ColorGenerator colorGenerator, int currShift, int x, int y)
+        {
+            if (FillColor == 1)
+            {
+                return colorGenerator.ComputeColor(buffer[currShift + 2], buffer[currShift + 1], buffer[currShift],
+                                        new Vector3D(normalMap[currShift + 2], normalMap[currShift + 1], normalMap[currShift]));
+            }
+            else
+            {
+                return colorGenerator.ComputeInterpolatedColor(new Point(x, y));
             }
         }
 

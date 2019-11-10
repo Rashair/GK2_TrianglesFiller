@@ -40,6 +40,15 @@ namespace GK2_TrianglesFiller
 
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            
+            var response = Microsoft.VisualBasic.Interaction.InputBox(
+                "Number of triangles will be roughly equal to " + MyCanvas.RenderSize.Width + "*" + MyCanvas.RenderSize.Height + " / sideLenght",
+                                            "Triangle side lenght", "120");
+            if (int.TryParse(response, out int side) && side > 0 && side <= 600)
+            {
+                SideLength = side;
+            }
+
             host = new DrawingHost(new Rect(MyCanvas.RenderSize));
             MyCanvas.Children.Add(host);
         }
@@ -235,17 +244,23 @@ namespace GK2_TrianglesFiller
 
         private void RadioFillColor_Checked(object sender, RoutedEventArgs e)
         {
-            if (RadioFillColor1.IsChecked.Value)
+            if (!this.IsLoaded)
+                return;
+
+            if (RadioFillColor1.IsChecked.Value && FillColor != 1)
             {
                 FillColor = 1;
+                host?.UpdateBackground();
             }
-            else if (RadioFillColor2.IsChecked.Value)
+            else if (RadioFillColor2.IsChecked.Value && FillColor != 2)
             {
                 FillColor = 2;
+                host?.UpdateBackground();
             }
-            else if (RadioFillColor3.IsChecked.Value)
+            else if (RadioFillColor3.IsChecked.Value && FillColor != 3)
             {
                 FillColor = 3;
+                host?.UpdateBackground();
             }
         }
     }
