@@ -62,8 +62,8 @@
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="2">
                         <Label Content="Light versor" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[0], Mode=TwoWay}" x:Name="RadioLightVersor1" Content="RadioOne" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" Height="38" HorizontalAlignment="Center"/>
-                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[1], Mode=TwoWay}" x:Name="RadioLightVersor2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Height="36" HorizontalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[0], Mode=TwoWay}" x:Name="RadioLightVersor1" Content="Constant" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" Height="38" HorizontalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[1], Mode=TwoWay}" x:Name="RadioLightVersor2" Content="Animated" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Height="36" HorizontalAlignment="Center"/>
                     </DockPanel>
 
                     <DockPanel Grid.Column="1" Grid.Row="3">
@@ -76,10 +76,12 @@
 
                     <StackPanel Grid.Column="1" Grid.Row="4">
                         <Label Content="Fill color" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}"  IsChecked="{Binding Path=FillColor[0], Mode=TwoWay}" x:Name="RadioFillColor1" Content="RadioOne" HorizontalAlignment="Center" Height="33" Margin="87,0,67,0" Width="96"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[1], Mode=TwoWay}"  x:Name="RadioFillColor2" Content="RadioTwo" HorizontalAlignment="Center" DockPanel.Dock="Top" Height="33" Margin="86,0,67,0" Width="96"/>
-                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="{Binding Path=FillColor[2], Mode=TwoWay}"  x:Name="RadioFillColor3" Content="RadioThree" Height="33" Margin="86,0,67,0" HorizontalAlignment="Center" Width="96"/>
-                        <!-- TODO: Sliders -->
+                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="false"  x:Name="RadioFillColor1" Content="Exact" HorizontalAlignment="Center" Height="33" Margin="87,0,67,0" Width="96"
+                                     Checked="RadioFillColor_Checked"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="false"  x:Name="RadioFillColor2" Content="From vertices" HorizontalAlignment="Center" DockPanel.Dock="Top" Height="33" Margin="86,0,67,0" Width="96"
+                                     Checked="RadioFillColor_Checked"/>
+                        <RadioButton GroupName="{Binding FillColorGroup}" IsChecked="false"  x:Name="RadioFillColor3" Content="Hybrid" Height="33" Margin="86,0,67,0" HorizontalAlignment="Center" Width="96"
+                                     Checked="RadioFillColor_Checked"/>
                     </StackPanel>
 
                     <Grid Grid.Column="1" Grid.Row="5" Margin="0,0,0,0" >
@@ -102,19 +104,21 @@
 
                         <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{c:Binding Path=(resources:Configuration.SameForAll), Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors1" Content="Same for all" HorizontalAlignment="Left"/>
                         <Label Grid.Row="2" Grid.Column="2" Content="Kd"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" HorizontalAlignment="Center" />
-                        <Slider x:Name="KdSlider"  Grid.Row="2" Grid.Column="3" Width="121" Margin="0" Height="24" Maximum="1" SmallChange="0.01" LargeChange="0.1" TickFrequency="0.1" TickPlacement="TopLeft" Value="0.5"
+                        <Slider x:Name="KdSlider"  Grid.Row="2" Grid.Column="3" Width="121" Margin="0" Height="24" Maximum="1" SmallChange="0.01" LargeChange="0.1" TickFrequency="0.1" TickPlacement="TopLeft" 
+                                Value="0.7"
                                 Thumb.DragStarted="KdSlider_DragStarted"
                                 Thumb.DragCompleted="KdSlider_DragCompleted"
                                 ValueChanged="KdSlider_ValueChanged"
                                 />
-                        
+
                         <Label Grid.Row="3" Grid.Column="2"   Content="Ks" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"  />
-                        <Slider x:Name="KsSlider" Grid.Row="3" Grid.Column="3" Width="121" Margin="0" Maximum="1" SmallChange="0.01" Value="0.5" TickFrequency="0.1" LargeChange="0.1" TickPlacement="TopLeft" 
+                        <Slider x:Name="KsSlider" Grid.Row="3" Grid.Column="3" Width="121" Margin="0" Maximum="1" SmallChange="0.01" TickFrequency="0.1" LargeChange="0.1" TickPlacement="TopLeft" 
+                                Value="0.3"
                                 Thumb.DragStarted="KsSlider_DragStarted"
                                 Thumb.DragCompleted="KsSlider_DragCompleted"
                                 ValueChanged="KsSlider_ValueChanged"
                                 />
-                        
+
                         <Label Grid.Row="4" Grid.Column="2"   Content="Specularity"  Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
                         <Slider x:Name="MSlider"  Grid.Row="4" Grid.Column="3" Width="121" Margin="0" Minimum="1" LargeChange="5" Value="10" TickPlacement="TopLeft" TickFrequency="10" SmallChange="1" 
                                 Thumb.DragStarted="MSlider_DragStarted"

@@ -23,7 +23,7 @@ namespace GK2_TrianglesFiller
         public string VectorGroup { get; } = Guid.NewGuid().ToString();
 
         public string FillColorGroup { get; } = Guid.NewGuid().ToString();
-        public bool[] FillColor { get; } = { true, false, false };
+        //public bool[] FillColor { get; } = { true, false, false };
 
         public string FactorsGroup { get; } = Guid.NewGuid().ToString();
         public bool[] Factors { get; } = { true, false };
@@ -222,6 +222,7 @@ namespace GK2_TrianglesFiller
             KdSlider.IsEnabled = true;
             KsSlider.IsEnabled = true;
             MSlider.IsEnabled = true;
+            host.UpdateBackground();
         }
 
         private void RadioFactors2_Checked(object sender, RoutedEventArgs e)
@@ -229,6 +230,23 @@ namespace GK2_TrianglesFiller
             KdSlider.IsEnabled = false;
             KsSlider.IsEnabled = false;
             MSlider.IsEnabled = false;
+            host.UpdateBackground();
+        }
+
+        private void RadioFillColor_Checked(object sender, RoutedEventArgs e)
+        {
+            if (RadioFillColor1.IsChecked.Value)
+            {
+                FillColor = 1;
+            }
+            else if (RadioFillColor2.IsChecked.Value)
+            {
+                FillColor = 2;
+            }
+            else if (RadioFillColor3.IsChecked.Value)
+            {
+                FillColor = 3;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Media.Media3D;
 using static System.Math;
 
 namespace GK2_TrianglesFiller.GeometryRes
@@ -44,6 +45,14 @@ namespace GK2_TrianglesFiller.GeometryRes
             }
 
             return result;
+        }
+
+        public static void ComputeNormalVector(this Vector3D v)
+        {
+            v.X = 2 * v.X - 1;
+            v.Y = 2 * v.Y - 1;
+            v.Z = 2 * v.Z - 1;
+            v.Normalize();
         }
     }
 }

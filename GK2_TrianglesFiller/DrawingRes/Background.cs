@@ -20,6 +20,8 @@ namespace GK2_TrianglesFiller.DrawingRes
 
         private readonly byte[] buffer;
         private readonly Int32Rect dirtyRect;
+        private ColorGenerator defaultGenerator;
+        private Random currentRandom;
 
         public Background(WriteableBitmap bitmap, List<List<Vertex>> grid, Rect rect, byte[] normalMap)
         {
@@ -54,12 +56,12 @@ namespace GK2_TrianglesFiller.DrawingRes
         public void FillGrid(BitmapSource img)
         {
             img.CopyPixels(buffer, bitmap.BackBufferStride, 0);
-            FillGridFromBuffer();
+            FillGridByTriangles();
         }
 
         public void FillGrid(Color color)
         {
-            byte[] cValues = color.GetByteValue();
+            byte[] cValues = ColorGenerator.GetByteValue(color);
             for (int i = 0; i < buffer.Length; i += 4)
             {
                 buffer[i] = cValues[0];
@@ -67,23 +69,14 @@ namespace GK2_TrianglesFiller.DrawingRes
                 buffer[i + 2] = cValues[2];
                 buffer[i + 3] = cValues[3];
             }
-
-            FillGridFromBuffer();
+            FillGridByTriangles();
         }
 
-        private void FillGridFromBuffer()
+ 
+        private void FillGridByTriangles()
         {
-
-            for (int i = 0; i < buffer.Length; i += 4)
-            {
-                var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i],
-                    new Vector3D(normalMap[i + 2], normalMap[i + 1], normalMap[i])
-                );
-                buffer[i] = B;
-                buffer[i + 1] = G;
-                buffer[i + 2] = R;
-            }
-
+            currentRandom = new Random();
+            defaultGenerator = new ColorGenerator(Kd, Ks, M);
             try
             {
                 bitmap.Lock();
@@ -93,6 +86,7 @@ namespace GK2_TrianglesFiller.DrawingRes
                     {
                         var lowerTriangle = new List<Point> { grid[i][j], grid[i + 1][j], grid[i + 1][j + 1] };
                         FillTriangle(lowerTriangle);
+
                         var upperTriangle = new List<Point> { grid[i][j], grid[i][j + 1], grid[i + 1][j + 1] };
                         FillTriangle(upperTriangle);
                     }
@@ -105,9 +99,16 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
+        private ColorGenerator GetGenerator()
+        {
+            return SameForAll ? defaultGenerator : 
+                new ColorGenerator(currentRandom.NextDouble(), currentRandom.NextDouble(), currentRandom.Next(1, 101));
+        }
+
         public void FillTriangle(List<Point> triangle)
         {
             var scanLine = new ScanLine(triangle);
+            var generator = GetGenerator();
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
                 if (y == bitmap.PixelHeight)
@@ -115,11 +116,29 @@ namespace GK2_TrianglesFiller.DrawingRes
                     continue;
                 }
 
-                for (int i = 0; i < xList.Count - 1; i += 2)
-                {
-                    int width = Math.Min(xList[i + 1], bitmap.PixelWidth) - xList[i];
-                    bitmap.WritePixels(new Int32Rect(xList[i], y, width, 1), buffer, bitmap.BackBufferStride, y * bitmap.BackBufferStride + xList[i] * BytesPerPixel);
+                FillRow(xList, y, generator);
+            }
+        }
 
+        private void FillRow(List<int> xList, int y, ColorGenerator colorGenerator = null)
+        {
+            int rowShift = y * bitmap.BackBufferStride;
+            for (int i = 0; i < xList.Count - 1; i += 2)
+            {
+                int currShift = rowShift + xList[i] * BytesPerPixel;
+                IntPtr pBackBuffer = bitmap.BackBuffer + currShift;
+                int endCol = Math.Min(xList[i + 1], bitmap.PixelWidth);
+                for (int x = xList[i]; x < endCol; ++x)
+                {
+                    var (R, G, B) = colorGenerator.ComputeColor(buffer[currShift + 2], buffer[currShift + 1], buffer[currShift],
+                        new Vector3D(normalMap[currShift + 2], normalMap[currShift + 1], normalMap[currShift]));
+                    byte A = buffer[currShift + 3];
+                    unsafe
+                    {
+                        *((int*)pBackBuffer) = (A << 24) | (R << 16) | (G << 8) | B;
+                        pBackBuffer += BytesPerPixel;
+                    }
+                    currShift += BytesPerPixel;
                 }
             }
         }

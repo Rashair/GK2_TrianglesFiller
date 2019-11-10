@@ -1,19 +1,19 @@
-﻿using System;
+﻿using GK2_TrianglesFiller.GeometryRes;
+using GK2_TrianglesFiller.Resources;
+using System;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller.DrawingRes
 {
-    public static class ColorGenerator
+    public class ColorGenerator
     {
         public static (double R, double G, double B) LightColor { get; set; }
         public static Vector3D DefaultNormalVector { get; } = new Vector3D(0, 0, 255);
         public static Vector3D DefaultLightVersor { get; } = new Vector3D(0, 0, 255);
-
         public static Vector3D V { get; } = new Vector3D(0, 0, 1);
 
-        public static int GetValue(this Color c)
+        public static int GetValue(Color c)
         {
             unchecked
             {
@@ -21,7 +21,7 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
-        public static byte[] GetByteValue(this Color c)
+        public static byte[] GetByteValue(Color c)
         {
             var arr = new byte[4];
             arr[0] = c.B;
@@ -31,7 +31,24 @@ namespace GK2_TrianglesFiller.DrawingRes
             return arr;
         }
 
-        public static (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D? normalVectorNullable = null, Vector3D? lightVersorNullable = null)
+        private static Vector3D GetRelativeVector(Vector3D v)
+        {
+            return Vector3D.Divide(v, 255.0);
+        }
+
+        
+        private double Kd;
+        private double Ks;
+        private int M;
+
+        public ColorGenerator(double Kd, double Ks, int M)
+        {
+            this.Kd = Kd;
+            this.Ks = Ks;
+            this.M = M;
+        }
+
+        public (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D? normalVectorNullable = null, Vector3D? lightVersorNullable = null)
         {
             var N = normalVectorNullable ?? DefaultNormalVector;
             var L = lightVersorNullable ?? DefaultLightVersor;
@@ -53,19 +70,6 @@ namespace GK2_TrianglesFiller.DrawingRes
             bVal = Kd * bVal * cos1 + Ks * bVal * cos2;
 
             return ((byte)rVal, (byte)gVal, (byte)bVal);
-        }
-
-        private static Vector3D GetRelativeVector(Vector3D v)
-        {
-            return Vector3D.Divide(v, 255.0);
-        }
-
-        private static void ComputeNormalVector(this Vector3D v)
-        {
-            v.X = 2 * v.X - 1;
-            v.Y = 2 * v.Y - 1;
-            v.Z = 2 * v.Z - 1;
-            v.Normalize();
         }
     }
 }
