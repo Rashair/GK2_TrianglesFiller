@@ -41,8 +41,14 @@
     <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CalcBinding, Version=2.5.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CalcBinding.2.5.2\lib\net45\CalcBinding.dll</HintPath>
+    </Reference>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
+    </Reference>
+    <Reference Include="DynamicExpresso.Core, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicExpresso.Core.2.3.1\lib\net461\DynamicExpresso.Core.dll</HintPath>
     </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net47\MahApps.Metro.dll</HintPath>
@@ -164,16 +170,18 @@
     <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\brick_normalmap.png" />
-    <Resource Include="Images\normal_map.jpg" />
+    <Resource Include="Images\brick_normal_map.png" />
+    <Resource Include="Images\ball_normal_map.jpg" />
     <Resource Include="Images\wallpaper.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\brick_normalmap2.jpg" />
-    <Resource Include="Images\normal_map2.jpg" />
+    <Resource Include="Images\my_normal_map.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\my_normal_map.jpg" />
+    <Resource Include="Images\ball_normal_map2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\brick_normal_map2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -20,7 +20,6 @@ namespace GK2_TrianglesFiller
         public bool[] LightVersor { get; } = { true, false };
 
         public string VectorGroup { get; } = Guid.NewGuid().ToString();
-        public bool[] Vector { get; } = { true, false };
 
         public string FillColorGroup { get; } = Guid.NewGuid().ToString();
         public bool[] FillColor { get; } = { true, false, false };
@@ -43,15 +42,69 @@ namespace GK2_TrianglesFiller
 
         private void ObjectColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
-            host?.SetBackground(e.NewValue.Value);
+            if (host != null)
+            {
+                UseConstantColor = true;
+                host.SetBackground(e.NewValue.Value);
+            }
         }
 
         private void ObjectColorFileButton_Click(object sender, RoutedEventArgs e)
         {
+            var img = GetImageFromFile();
+            if (img != null)
+            {
+                UseConstantColor = false;
+                host.SetBackground(img);
+            }
 
+        }
+
+        private void ResetButton_Click(object sender, RoutedEventArgs e)
+        {
+            UseConstantColor = false;
+            host.SetBackground(DefaultImage);
+        }
+
+        private void CheckBox_Changed(object sender, RoutedEventArgs e)
+        {
+            DrawGrid = drawGridCheck.IsChecked.Value;
+            host?.Render();
+        }
+
+        private void LightColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            if (e.NewValue.HasValue)
+            {
+                LightColor = e.NewValue.Value;
+                host?.UpdateBackground();
+            }
+        }
+
+
+        private void RadioVector_Checked(object sender, RoutedEventArgs e)
+        {
+            if (host != null)
+            {
+                if (RadioVector1.IsChecked.Value)
+                {
+                    host.SetMap(null);
+                }
+                else
+                {
+                    var img = GetImageFromFile();
+                    if (img != null)
+                    {
+                        host.SetMap(img);
+                    }
+                }
+            }
+        }
+
+        private BitmapImage GetImageFromFile()
+        {
             OpenFileDialog dlg = new OpenFileDialog
             {
-                // TODO: other extensions
                 Filter = "Images (*.jpg, *.jpeg, *.jpe, *.jfif, *.png)|*.jpg;*.jpeg;*.jpe;*.jfif;*.png"
             };
 
@@ -77,35 +130,11 @@ namespace GK2_TrianglesFiller
                         img.Freeze();
                     }
                 }
-                host.SetBackground(img);
+
+                return img;
             }
 
-        }
-
-        private void ResetButton_Click(object sender, RoutedEventArgs e)
-        {
-            host.SetBackground(DefaultImage);
-        }
-
-        private void CheckBox_Changed(object sender, RoutedEventArgs e)
-        {
-            DrawGrid = drawGridCheck.IsChecked.Value;
-            host?.Render();
-        }
-
-        private void LightColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            if (e.NewValue.HasValue)
-            {
-                LightColor = e.NewValue.Value;
-                host?.UpdateBackground();
-            }
-        }
-
-        private void RadioVector2_Checked(object sender, RoutedEventArgs e)
-        {
-            UseConstantVector = false;
-            host?.UpdateBackground();
+            return null;
         }
     }
 }

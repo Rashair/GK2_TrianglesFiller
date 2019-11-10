@@ -16,16 +16,18 @@ namespace GK2_TrianglesFiller.DrawingRes
         private readonly List<List<Vertex>> grid;
         private readonly DrawingGroup drawingGroup;
         private readonly WriteableBitmap bitmap;
+        private readonly byte[] normalMap;
 
         private readonly byte[] buffer;
         private readonly Int32Rect dirtyRect;
 
-        public Background(WriteableBitmap bitmap, List<List<Vertex>> grid, Rect rect)
+        public Background(WriteableBitmap bitmap, List<List<Vertex>> grid, Rect rect, byte[] normalMap)
         {
             drawingGroup = new DrawingGroup();
             Rect = rect;
             this.grid = grid;
             this.bitmap = bitmap;
+            this.normalMap = normalMap;
 
             buffer = new byte[bitmap.PixelHeight * bitmap.BackBufferStride];
             dirtyRect = new Int32Rect(0, 0, bitmap.PixelWidth, bitmap.PixelHeight);
@@ -34,6 +36,8 @@ namespace GK2_TrianglesFiller.DrawingRes
         }
 
         public Rect Rect { get; }
+
+        public int Stride { get => bitmap.BackBufferStride; }
 
         public DrawingGroup Drawing
         {
@@ -47,13 +51,13 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
-        public void FillGrid(BitmapSource img, byte[] normalMap = null)
+        public void FillGrid(BitmapSource img)
         {
             img.CopyPixels(buffer, bitmap.BackBufferStride, 0);
-            FillGridFromBuffer(normalMap);
+            FillGridFromBuffer();
         }
 
-        public void FillGrid(Color color, byte[] normalMap = null)
+        public void FillGrid(Color color)
         {
             byte[] cValues = color.GetByteValue();
             for (int i = 0; i < buffer.Length; i += 4)
@@ -64,33 +68,22 @@ namespace GK2_TrianglesFiller.DrawingRes
                 buffer[i + 3] = cValues[3];
             }
 
-            FillGridFromBuffer(normalMap);
+            FillGridFromBuffer();
         }
 
-        private void FillGridFromBuffer(byte[] normalMap)
+        private void FillGridFromBuffer()
         {
-            if (normalMap != null)
+
+            for (int i = 0; i < buffer.Length; i += 4)
             {
-                for (int i = 0; i < buffer.Length; i += 4)
-                {
-                    var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i],
-                        new Vector3D(normalMap[i + 2], normalMap[i + 1], normalMap[i])
-                    );
-                    buffer[i] = B;
-                    buffer[i + 1] = G;
-                    buffer[i + 2] = R;
-                }
+                var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i],
+                    new Vector3D(normalMap[i + 2], normalMap[i + 1], normalMap[i])
+                );
+                buffer[i] = B;
+                buffer[i + 1] = G;
+                buffer[i + 2] = R;
             }
-            else
-            {
-                for (int i = 0; i < buffer.Length; i += 4)
-                {
-                    var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i]);
-                    buffer[i] = B;
-                    buffer[i + 1] = G;
-                    buffer[i + 2] = R;
-                }
-            }
+
 
             try
             {

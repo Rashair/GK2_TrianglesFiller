@@ -10,7 +10,7 @@ namespace GK2_TrianglesFiller.Resources
         public static bool DrawVertices = false;
         public static bool DrawGrid = false;
 
-        public static bool ObjectColorFromTexture = true;
+        public static bool UseConstantColor = false;
         public static BitmapImage DefaultImage = new BitmapImage(new Uri(@"pack://application:,,,/Images/wallpaper.png"));
 
         private static Color lightColor;
@@ -24,8 +24,8 @@ namespace GK2_TrianglesFiller.Resources
             }
         }
 
-        public static bool UseConstantVector = false;
-        public static BitmapImage DefaultNormalMap = new BitmapImage(new Uri(@"pack://application:,,,/Images/my_normal_map.jpg"));
+        public static bool UseConstantVector { get; set; } = false;
+        public static BitmapImage DefaultNormalMap = new BitmapImage(new Uri(@"pack://application:,,,/Images/brick_normal_map2.png"));
 
         public const double SideLength = 120;
         public const double DPI = 96;
@@ -50,6 +50,10 @@ namespace GK2_TrianglesFiller.Resources
             if (DefaultImage.CanFreeze)
             {
                 DefaultImage.Freeze();
+            }
+            if (DefaultNormalMap.CanFreeze)
+            {
+                DefaultNormalMap.Freeze();
             }
         }
     }

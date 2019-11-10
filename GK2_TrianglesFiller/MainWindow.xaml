@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:c="clr-namespace:CalcBinding;assembly=CalcBinding"
         xmlns:local="clr-namespace:GK2_TrianglesFiller"
         xmlns:System="clr-namespace:System;assembly=mscorlib" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:drawingres="clr-namespace:GK2_TrianglesFiller.DrawingRes" 
@@ -67,9 +68,10 @@
 
                     <DockPanel Grid.Column="1" Grid.Row="3">
                         <Label Content="Normal vector" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding VectorGroup}" IsChecked="False" x:Name="RadioVector1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,87,0"/>
-                        <RadioButton GroupName="{Binding VectorGroup}" IsChecked="True" x:Name="RadioVector2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,87,0" 
-                                     Checked="RadioVector2_Checked"/>
+                        <RadioButton GroupName="{Binding VectorGroup}" x:Name="RadioVector1" Content="Constant vector" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,38,0" 
+                                     Width="125" IsChecked="{c:Binding Path=(resources:Configuration.UseConstantVector), Mode=TwoWay}" Checked="RadioVector_Checked"/>
+                        <RadioButton GroupName="{Binding VectorGroup}" x:Name="RadioVector2" Content="Vector from file" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,38,0" 
+                                     Width="125" IsChecked="{c:Binding Path=(!resources:Configuration.UseConstantVector), Mode=TwoWay}" Checked="RadioVector_Checked" />
                     </DockPanel>
 
                     <StackPanel Grid.Column="1" Grid.Row="4">
