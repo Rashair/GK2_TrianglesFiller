@@ -50,25 +50,6 @@ namespace GK2_TrianglesFiller.DrawingRes
             this.M = M;
         }
 
-        private byte[] interpolationColors = null;
-        private Vector3D[] interVectors = null;
-        private List<Point> triangle = null;
-        public void SetColorsForInterpolation(List<Point> triangle, byte[] colors, Vector3D[] normalVectors)
-        {
-            this.triangle = triangle;
-            // ARGB
-            for (int i = 0; i < 3; ++i)
-            {
-                var (R, G, B) = ComputeColor(colors[i], colors[i + 1], colors[i + 2], normalVectors[i]);
-                colors[i] = R;
-                colors[i + 1] = G;
-                colors[i + 2] = B;
-            }
-
-            interpolationColors = colors;
-            interVectors = normalVectors;
-        }
-
         public (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D? normalVectorNullable = null, Vector3D? lightVersorNullable = null)
         {
             var N = normalVectorNullable ?? DefaultNormalVector;
@@ -93,6 +74,32 @@ namespace GK2_TrianglesFiller.DrawingRes
             return ((byte)rVal, (byte)gVal, (byte)bVal);
         }
 
+
+        /// <summary>
+        ///  Interpolation section
+        /// </summary>
+        private byte[] interpolationColors = null;
+        private byte[] computedColors = null;
+        private Vector3D[] interVectors = null;
+        private List<Point> triangle = null;
+        public void SetColorsForInterpolation(List<Point> triangle, byte[] colors, Vector3D[] normalVectors)
+        {
+            this.triangle = triangle;
+            // ARGB
+            computedColors = new byte[colors.Length];
+            for (int i = 0; i < 9; i += 3)
+            {
+                var (R, G, B) = ComputeColor(colors[i], colors[i + 1], colors[i + 2], normalVectors[i / 3]);
+                computedColors[i] = R;
+                computedColors[i + 1] = G;
+                computedColors[i + 2] = B;
+            }
+
+            interpolationColors = colors;
+            interVectors = normalVectors;
+        }
+
+
         public (byte R, byte G, byte B) ComputeInterpolatedColor(Point currPoint)
         {
             Vector3D distanceFromVertices = GetDistanceFromVertices(currPoint);
@@ -113,10 +120,43 @@ namespace GK2_TrianglesFiller.DrawingRes
 
         private byte ComputeSingleColor(Vector3D d, int i)
         {
-            return (byte)((d.X * interpolationColors[i] +
-                           d.Y * interpolationColors[i + 3] +
-                           d.Z * interpolationColors[i + 6]) 
-                           / (d.X + d.Y + d.Z));
+            if (Configuration.FillColor == 2)
+            {
+                return (byte)((d.X * computedColors[i] +
+                               d.Y * computedColors[i + 3] +
+                               d.Z * computedColors[i + 6])
+                               / (d.X + d.Y + d.Z));
+            }
+            else
+            {
+                var L = DefaultLightVersor;
+                Vector3D N = GetInterpolatedVector(d);
+                N = GetRelativeVector(N);
+                N.ComputeNormalVector();
+                L = GetRelativeVector(L);
+                Vector3D RVector = 2 * Vector3D.DotProduct(N, L) * N - L;
+
+                double val = (d.X * interpolationColors[i] + d.Y * interpolationColors[i + 3] + d.Z * interpolationColors[i + 6]) / (d.X + d.Y + d.Z) 
+                    * GetLightColor(i);
+
+                var cos1 = Vector3D.DotProduct(N, L);
+                var cos2 = Math.Pow(Vector3D.DotProduct(V, RVector), M);
+
+                return (byte)(Kd * val * cos1 + Ks * val * cos2);
+            }
+        }
+
+
+        private double GetLightColor(int i)
+        {
+            return i % 3 == 0 ? LightColor.R :
+                   i % 3 == 1 ? LightColor.G :
+                   LightColor.B;
+        }
+
+        private Vector3D GetInterpolatedVector(Vector3D dist)
+        {
+            return ((dist.X * interVectors[0]) + (dist.Y * interVectors[1]) + (dist.Z * interVectors[2])) / (dist.X + dist.Y + dist.Z);
         }
     }
 }

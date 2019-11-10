@@ -15,18 +15,11 @@ namespace GK2_TrianglesFiller
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        public string ObjectColorGroup { get; } = Guid.NewGuid().ToString();
-
-        public string LightVersorGroup { get; } = Guid.NewGuid().ToString();
-        public bool[] LightVersor { get; } = { true, false };
-
-        public string VectorGroup { get; } = Guid.NewGuid().ToString();
-
-        public string FillColorGroup { get; } = Guid.NewGuid().ToString();
-        //public bool[] FillColor { get; } = { true, false, false };
-
-        public string FactorsGroup { get; } = Guid.NewGuid().ToString();
-        public bool[] Factors { get; } = { true, false };
+        //public string ObjectColorGroup { get; } = Guid.NewGuid().ToString();
+        //public string LightVersorGroup { get; } = Guid.NewGuid().ToString();
+        //public string VectorGroup { get; } = Guid.NewGuid().ToString();
+        //public string FillColorGroup { get; } = Guid.NewGuid().ToString();
+        //public string FactorsGroup { get; } = Guid.NewGuid().ToString();
 
         private DrawingHost host;
         private DispatcherTimer dispatcherTimer = new DispatcherTimer();
@@ -53,6 +46,7 @@ namespace GK2_TrianglesFiller
             MyCanvas.Children.Add(host);
         }
 
+        // Not running yet
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             host.UpdateBackground();

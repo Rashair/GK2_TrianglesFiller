@@ -62,8 +62,8 @@
                     </DockPanel>
                     <DockPanel Grid.Column="1" Grid.Row="2">
                         <Label Content="Light versor" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[0], Mode=TwoWay}" x:Name="RadioLightVersor1" Content="Constant" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" Height="38" HorizontalAlignment="Center"/>
-                        <RadioButton GroupName="{Binding LightVersorGroup}" IsChecked="{Binding Path=LightVersor[1], Mode=TwoWay}" x:Name="RadioLightVersor2" Content="Animated" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Height="36" HorizontalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}"  x:Name="RadioLightVersor1" Content="Constant" HorizontalContentAlignment="Stretch" DockPanel.Dock="Top" Height="38" HorizontalAlignment="Center"/>
+                        <RadioButton GroupName="{Binding LightVersorGroup}"  x:Name="RadioLightVersor2" Content="Animated" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Height="36" HorizontalAlignment="Center"/>
                     </DockPanel>
 
                     <DockPanel Grid.Column="1" Grid.Row="3">
