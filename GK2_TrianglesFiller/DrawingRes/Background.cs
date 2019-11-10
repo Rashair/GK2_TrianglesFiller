@@ -72,7 +72,7 @@ namespace GK2_TrianglesFiller.DrawingRes
             FillGridByTriangles();
         }
 
- 
+
         private void FillGridByTriangles()
         {
             currentRandom = new Random();
@@ -99,16 +99,35 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
-        private ColorGenerator GetGenerator()
+        private ColorGenerator GetGenerator(List<Point> triangle)
         {
-            return SameForAll ? defaultGenerator : 
+            var generator = SameForAll ? defaultGenerator :
                 new ColorGenerator(currentRandom.NextDouble(), currentRandom.NextDouble(), currentRandom.Next(1, 101));
+
+            if (FillColor != 1)
+            {
+                List<byte> vertexColors = new List<byte>(12);
+                vertexColors.AddRange(GetColorFromPoint(triangle[0]));
+                vertexColors.AddRange(GetColorFromPoint(triangle[1]));
+                vertexColors.AddRange(GetColorFromPoint(triangle[2]));
+
+                generator.SetColorsForInterpolation(vertexColors.ToArray());
+            }
+
+            return generator;
         }
+
+        private byte[] GetColorFromPoint(Point p)
+        {
+            var shift = (int)p.Y * bitmap.BackBufferStride + (int)p.X * BytesPerPixel;
+            return new byte[] { buffer[shift + 3], buffer[shift + 2], buffer[shift + 1], buffer[shift] };
+        }
+
 
         public void FillTriangle(List<Point> triangle)
         {
             var scanLine = new ScanLine(triangle);
-            var generator = GetGenerator();
+            var generator = GetGenerator(triangle);
             foreach (var (xList, y) in scanLine.GetIntersectionPoints())
             {
                 if (y == bitmap.PixelHeight)

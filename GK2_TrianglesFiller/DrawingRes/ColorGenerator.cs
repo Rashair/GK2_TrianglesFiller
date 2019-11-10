@@ -36,7 +36,7 @@ namespace GK2_TrianglesFiller.DrawingRes
             return Vector3D.Divide(v, 255.0);
         }
 
-        
+
         private double Kd;
         private double Ks;
         private int M;
@@ -48,8 +48,20 @@ namespace GK2_TrianglesFiller.DrawingRes
             this.M = M;
         }
 
+        private byte[] interpolationColors = null;
+        public void SetColorsForInterpolation(byte[] colors)
+        {
+            // ARGB
+            interpolationColors = colors;
+        }
+
         public (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D? normalVectorNullable = null, Vector3D? lightVersorNullable = null)
         {
+            if (interpolationColors != null)
+            {
+                return ComputeInterpolatedColor(normalVectorNullable.Value);
+            }
+
             var N = normalVectorNullable ?? DefaultNormalVector;
             var L = lightVersorNullable ?? DefaultLightVersor;
 
@@ -70,6 +82,23 @@ namespace GK2_TrianglesFiller.DrawingRes
             bVal = Kd * bVal * cos1 + Ks * bVal * cos2;
 
             return ((byte)rVal, (byte)gVal, (byte)bVal);
+        }
+
+        private (byte R, byte G, byte B) ComputeInterpolatedColor(Vector3D distanceFromVertices)
+        {
+            distanceFromVertices.Normalize();
+            byte R = ComputeSingleColor(distanceFromVertices, 1);
+            byte G = ComputeSingleColor(distanceFromVertices, 2);
+            byte B = ComputeSingleColor(distanceFromVertices, 3);
+
+            return (R, G, B);
+        }
+
+        private byte ComputeSingleColor(Vector3D d, int i)
+        {
+            return (byte)(d.X * interpolationColors[i] +
+                            d.Y * interpolationColors[i + 3] +
+                            d.Z * interpolationColors[i + 7]);
         }
     }
 }
