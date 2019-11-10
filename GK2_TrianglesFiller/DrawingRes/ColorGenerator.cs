@@ -1,5 +1,7 @@
-﻿using System.Windows.Media;
+﻿using System;
+using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller.DrawingRes
 {
@@ -8,6 +10,8 @@ namespace GK2_TrianglesFiller.DrawingRes
         public static (double R, double G, double B) LightColor { get; set; }
         public static Vector3D DefaultNormalVector { get; } = new Vector3D(0, 0, 255);
         public static Vector3D DefaultLightVersor { get; } = new Vector3D(0, 0, 255);
+
+        public static Vector3D V { get; } = new Vector3D(0, 0, 1);
 
         public static int GetValue(this Color c)
         {
@@ -29,17 +33,24 @@ namespace GK2_TrianglesFiller.DrawingRes
 
         public static (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D? normalVectorNullable = null, Vector3D? lightVersorNullable = null)
         {
-            var normalVector = normalVectorNullable ?? DefaultNormalVector;
-            var lightVersor = lightVersorNullable ?? DefaultLightVersor;
+            var N = normalVectorNullable ?? DefaultNormalVector;
+            var L = lightVersorNullable ?? DefaultLightVersor;
 
-            normalVector = GetRelativeVector(normalVector);
-            normalVector.ComputeNormalVector();
+            N = GetRelativeVector(N);
+            N.ComputeNormalVector();
+            L = GetRelativeVector(L);
+            Vector3D RVector = 2 * Vector3D.DotProduct(N, L) * N - L;
 
-            lightVersor = GetRelativeVector(lightVersor);
+            double rVal = R * LightColor.R;
+            double gVal = G * LightColor.G;
+            double bVal = B * LightColor.B;
 
-            double rVal = 1 * R * LightColor.R * Vector3D.DotProduct(normalVector, lightVersor);
-            double gVal = 1 * G * LightColor.G * Vector3D.DotProduct(normalVector, lightVersor);
-            double bVal = 1 * B * LightColor.B * Vector3D.DotProduct(normalVector, lightVersor);
+            var cos1 = Vector3D.DotProduct(N, L);
+            var cos2 = Math.Pow(Vector3D.DotProduct(V, RVector), M);
+
+            rVal = Kd * rVal * cos1 + Ks * rVal * cos2;
+            gVal = Kd * gVal * cos1 + Ks * gVal * cos2;
+            bVal = Kd * bVal * cos1 + Ks * bVal * cos2;
 
             return ((byte)rVal, (byte)gVal, (byte)bVal);
         }

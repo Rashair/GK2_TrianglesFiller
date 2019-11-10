@@ -84,7 +84,6 @@ namespace GK2_TrianglesFiller.DrawingRes
                 buffer[i + 2] = R;
             }
 
-
             try
             {
                 bitmap.Lock();

@@ -100,15 +100,29 @@
 
                         <Label Content="Factors" Grid.ColumnSpan="4" VerticalAlignment="Center" FontSize="18"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
 
-                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{Binding Path=Factors[0], Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors1" Content="Same for all" HorizontalAlignment="Left"/>
+                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{c:Binding Path=(resources:Configuration.SameForAll), Mode=TwoWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors1" Content="Same for all" HorizontalAlignment="Left"/>
                         <Label Grid.Row="2" Grid.Column="2" Content="Kd"  HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" HorizontalAlignment="Center" />
-                        <Slider  Grid.Row="2" Grid.Column="3" Width="121" Margin="0" Height="24" Maximum="1" SmallChange="0.01" LargeChange="0.1" TickFrequency="0.1" TickPlacement="TopLeft" Value="0.5"/>
+                        <Slider x:Name="KdSlider"  Grid.Row="2" Grid.Column="3" Width="121" Margin="0" Height="24" Maximum="1" SmallChange="0.01" LargeChange="0.1" TickFrequency="0.1" TickPlacement="TopLeft" Value="0.5"
+                                Thumb.DragStarted="KdSlider_DragStarted"
+                                Thumb.DragCompleted="KdSlider_DragCompleted"
+                                ValueChanged="KdSlider_ValueChanged"
+                                />
+                        
                         <Label Grid.Row="3" Grid.Column="2"   Content="Ks" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center"  />
-                        <Slider Grid.Row="3" Grid.Column="3" Width="121" Margin="0" Maximum="1" SmallChange="0.01" Value="0.5" TickFrequency="0.1" LargeChange="0.1" TickPlacement="TopLeft"/>
+                        <Slider x:Name="KsSlider" Grid.Row="3" Grid.Column="3" Width="121" Margin="0" Maximum="1" SmallChange="0.01" Value="0.5" TickFrequency="0.1" LargeChange="0.1" TickPlacement="TopLeft" 
+                                Thumb.DragStarted="KsSlider_DragStarted"
+                                Thumb.DragCompleted="KsSlider_DragCompleted"
+                                ValueChanged="KsSlider_ValueChanged"
+                                />
+                        
                         <Label Grid.Row="4" Grid.Column="2"   Content="Specularity"  Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center"/>
-                        <Slider  Grid.Row="4" Grid.Column="3" Width="121" Margin="0" Minimum="1" LargeChange="5" Value="10" TickPlacement="TopLeft" TickFrequency="10" SmallChange="1"/>
+                        <Slider x:Name="MSlider"  Grid.Row="4" Grid.Column="3" Width="121" Margin="0" Minimum="1" LargeChange="5" Value="10" TickPlacement="TopLeft" TickFrequency="10" SmallChange="1" 
+                                Thumb.DragStarted="MSlider_DragStarted"
+                                Thumb.DragCompleted="MSlider_DragCompleted"
+                                ValueChanged="MSlider_ValueChanged"
+                                />
 
-                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{Binding Path=Factors[1], Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors2" Content="Random for each"  HorizontalAlignment="Left"  />
+                        <RadioButton GroupName="{Binding FactorsGroup}" IsChecked="{c:Binding Path=(!resources:Configuration.SameForAll), Mode=TwoWay}" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3"  x:Name="RadioFactors2" Content="Random for each"  HorizontalAlignment="Left" Unchecked="RadioFactors2_Unchecked" Checked="RadioFactors2_Checked"  />
                     </Grid>
                     <Grid Grid.Column="1" Grid.Row="6">
                         <Grid.ColumnDefinitions>

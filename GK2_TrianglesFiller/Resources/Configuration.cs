@@ -27,6 +27,11 @@ namespace GK2_TrianglesFiller.Resources
         public static bool UseConstantVector { get; set; } = false;
         public static BitmapImage DefaultNormalMap = new BitmapImage(new Uri(@"pack://application:,,,/Images/brick_normal_map2.png"));
 
+        public static bool SameForAll { get; set; } = true;
+        public static double Kd { get; set; } = 1;
+        public static double Ks { get; set; } = 0.5;
+        public static int M { get; set; } = 10;
+
         public const double SideLength = 120;
         public const double DPI = 96;
         public static PixelFormat MyPixelFormat = PixelFormats.Bgra32;

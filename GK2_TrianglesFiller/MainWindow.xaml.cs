@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller
@@ -28,16 +29,24 @@ namespace GK2_TrianglesFiller
         public bool[] Factors { get; } = { true, false };
 
         private DrawingHost host;
+        private DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
         public MainWindow()
         {
             InitializeComponent();
+            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(50);
         }
 
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
         {
             host = new DrawingHost(new Rect(MyCanvas.RenderSize));
             MyCanvas.Children.Add(host);
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            host.UpdateBackground();
         }
 
         private void ObjectColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
@@ -135,6 +144,91 @@ namespace GK2_TrianglesFiller
             }
 
             return null;
+        }
+
+
+        #region Sliders
+        private bool dragStarted = false;
+        // Kd
+        private void KdSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            Kd = KdSlider.Value;
+            host.UpdateBackground();
+            dragStarted = false;
+        }
+
+        private void KdSlider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            dragStarted = true;
+        }
+
+        private void KdSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!dragStarted)
+            {
+                Kd = e.NewValue;
+                host?.UpdateBackground();
+            }
+        }
+
+        // Ks
+        private void KsSlider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            dragStarted = true;
+        }
+
+        private void KsSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            Ks = KsSlider.Value;
+            host.UpdateBackground();
+            dragStarted = false;
+        }
+
+        private void KsSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!dragStarted)
+            {
+                Ks = e.NewValue;
+                host?.UpdateBackground();
+            }
+        }
+
+        // M
+        private void MSlider_DragStarted(object sender, System.Windows.Controls.Primitives.DragStartedEventArgs e)
+        {
+            dragStarted = true;
+        }
+
+        private void MSlider_DragCompleted(object sender, System.Windows.Controls.Primitives.DragCompletedEventArgs e)
+        {
+            M = (int)MSlider.Value;
+            host.UpdateBackground();
+            dragStarted = false;
+        }
+
+        private void MSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!dragStarted)
+            {
+                M = (int)e.NewValue;
+                host?.UpdateBackground();
+            }
+        }
+
+        #endregion Slider
+
+        private void RadioFactors2_Unchecked(object sender, RoutedEventArgs e)
+        {
+            KdSlider.IsEnabled = true;
+            KsSlider.IsEnabled = true;
+            MSlider.IsEnabled = true;
+        }
+
+        private void RadioFactors2_Checked(object sender, RoutedEventArgs e)
+        {
+            KdSlider.IsEnabled = false;
+            KsSlider.IsEnabled = false;
+            MSlider.IsEnabled = false;
         }
     }
 }

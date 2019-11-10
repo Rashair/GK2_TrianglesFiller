@@ -1,6 +1,7 @@
 ﻿using GK2_TrianglesFiller.DrawingRes;
 using GK2_TrianglesFiller.VertexRes;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -125,9 +126,11 @@ namespace GK2_TrianglesFiller
             }
             else
             {
-                background.FillGrid(currentColorBitmap);
+               background.FillGrid(currentColorBitmap);
             }
+
             Render();
+
         }
 
         public void SetBackground(Color color)
