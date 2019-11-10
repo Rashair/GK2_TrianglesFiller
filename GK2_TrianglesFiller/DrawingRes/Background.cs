@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using static GK2_TrianglesFiller.Resources.Configuration;
 
 namespace GK2_TrianglesFiller.DrawingRes
@@ -46,20 +47,13 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
         }
 
-        public void FillGrid(BitmapSource img)
+        public void FillGrid(BitmapSource img, byte[] normalMap = null)
         {
             img.CopyPixels(buffer, bitmap.BackBufferStride, 0);
-            for (int i = 0; i < buffer.Length; i += 4)
-            {
-                var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i]);
-                buffer[i] = B;
-                buffer[i + 1] = G;
-                buffer[i + 2] = R;
-            }
-            FillGridFromBuffer();
+            FillGridFromBuffer(normalMap);
         }
 
-        public void FillGrid(Color color)
+        public void FillGrid(Color color, byte[] normalMap = null)
         {
             byte[] cValues = color.GetByteValue();
             for (int i = 0; i < buffer.Length; i += 4)
@@ -70,11 +64,34 @@ namespace GK2_TrianglesFiller.DrawingRes
                 buffer[i + 3] = cValues[3];
             }
 
-            FillGridFromBuffer();
+            FillGridFromBuffer(normalMap);
         }
 
-        private void FillGridFromBuffer()
+        private void FillGridFromBuffer(byte[] normalMap)
         {
+            if (normalMap != null)
+            {
+                for (int i = 0; i < buffer.Length; i += 4)
+                {
+                    var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i],
+                        new Vector3D(normalMap[i + 2], normalMap[i + 1], normalMap[i])
+                    );
+                    buffer[i] = B;
+                    buffer[i + 1] = G;
+                    buffer[i + 2] = R;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < buffer.Length; i += 4)
+                {
+                    var (R, G, B) = ColorGenerator.ComputeColor(buffer[i + 2], buffer[i + 1], buffer[i]);
+                    buffer[i] = B;
+                    buffer[i + 1] = G;
+                    buffer[i + 2] = R;
+                }
+            }
+
             try
             {
                 bitmap.Lock();

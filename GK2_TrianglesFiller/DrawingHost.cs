@@ -1,5 +1,6 @@
 ﻿using GK2_TrianglesFiller.DrawingRes;
 using GK2_TrianglesFiller.VertexRes;
+using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -23,6 +24,8 @@ namespace GK2_TrianglesFiller
         private Color currentColor;
         private BitmapSource currentColorBitmap;
 
+        private byte[] currentNormalMap;
+
         public DrawingHost(Rect rect)
         {
             this.MouseDown += Host_MouseDown;
@@ -35,12 +38,15 @@ namespace GK2_TrianglesFiller
             realWidth = (triangleGrid.Cols - 1) * SideLength;
             this.Rect = new Rect(rect.Left, rect.Top, realWidth, realHeight);
 
-            WriteableBitmap bitmap = new WriteableBitmap((int)realWidth, (int)realHeight, DPI, DPI, GK2_TrianglesFiller.Resources.Configuration.PixelFormat, null);
+            WriteableBitmap bitmap = new WriteableBitmap((int)realWidth, (int)realHeight, DPI, DPI, GK2_TrianglesFiller.Resources.Configuration.MyPixelFormat, null);
             background = new Background(bitmap, triangleGrid.Grid, Rect);
 
             currentColor = Colors.Yellow;
             currentColorBitmap = GetScaledImage(DefaultImage);
-            background.FillGrid(currentColorBitmap);
+
+            currentNormalMap = GetBytesFromBitmap(GetRepeatedImage(DefaultNormalMap));
+
+            background.FillGrid(currentColorBitmap, currentNormalMap);
         }
 
         private void Host_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -108,11 +114,25 @@ namespace GK2_TrianglesFiller
         {
             if (ObjectColorFromTexture)
             {
-                background.FillGrid(currentColorBitmap);
+                if (UseConstantVector)
+                {
+                    background.FillGrid(currentColorBitmap);
+                }
+                else
+                {
+                    background.FillGrid(currentColorBitmap, currentNormalMap);
+                }
             }
             else
             {
-                background.FillGrid(currentColor);
+                if (UseConstantVector)
+                {
+                    background.FillGrid(currentColor);
+                }
+                else
+                {
+                    background.FillGrid(currentColor, currentNormalMap);
+                }
             }
             Render();
         }
@@ -131,9 +151,68 @@ namespace GK2_TrianglesFiller
             UpdateBackground();
         }
 
-        private TransformedBitmap GetScaledImage(BitmapImage image)
+
+        private BitmapSource GetScaledImage(BitmapImage image)
         {
-            return new TransformedBitmap(image, new ScaleTransform(realWidth / image.PixelWidth, realHeight / image.PixelHeight));
+            BitmapSource source = image;
+            if (source.Format != MyPixelFormat)
+            {
+                source = new FormatConvertedBitmap(source, MyPixelFormat, null, 0);
+            }
+            return FreezeImage(new TransformedBitmap(source, new ScaleTransform(realWidth / source.PixelWidth, realHeight / source.PixelHeight)));
+        }
+
+        private BitmapSource GetRepeatedImage(BitmapImage image)
+        {
+            BitmapSource source = image;
+            if (source.Format != MyPixelFormat)
+            {
+                source = new FormatConvertedBitmap(source, MyPixelFormat, null, 0);
+            }
+
+            int stride = source.PixelWidth * (BytesPerPixel);
+            byte[] data = new byte[stride * source.PixelHeight];
+            source.CopyPixels(data, stride, 0);
+
+            WriteableBitmap target = new WriteableBitmap(
+                (int)realWidth,
+                (int)realHeight,
+                DPI, DPI,
+                MyPixelFormat, null
+            );
+
+            for (int x = 0; x <= target.PixelWidth; x += source.PixelWidth)
+            {
+                for (int y = 0; y <= target.PixelHeight; y += source.PixelHeight)
+                {
+                    int width = Math.Min(source.PixelWidth, target.PixelWidth - x);
+                    int height = Math.Min(source.PixelHeight, target.PixelHeight - y);
+                    target.WritePixels(
+                        new Int32Rect(x, y, width, height),
+                        data, stride, 0
+                    );
+                }
+            }
+
+            return FreezeImage(target);
+        }
+
+        private byte[] GetBytesFromBitmap(BitmapSource source)
+        {
+            int stride = source.PixelWidth * BytesPerPixel;
+            byte[] result = new byte[stride * source.PixelHeight];
+            source.CopyPixels(result, stride, 0);
+            return result;
+        }
+
+        private BitmapSource FreezeImage(BitmapSource source)
+        {
+            if (source.CanFreeze)
+            {
+                source.Freeze();
+            }
+
+            return source;
         }
     }
 }

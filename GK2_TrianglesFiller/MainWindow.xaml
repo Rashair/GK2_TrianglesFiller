@@ -67,8 +67,9 @@
 
                     <DockPanel Grid.Column="1" Grid.Row="3">
                         <Label Content="Normal vector" Height="30" DockPanel.Dock="Top" VerticalAlignment="Center" FontSize="18" UseLayoutRounding="False" VerticalContentAlignment="Center"/>
-                        <RadioButton GroupName="{Binding VectorGroup}" IsChecked="{Binding Path=Vector[0], Mode=TwoWay}" x:Name="RadioVector1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,87,0"/>
-                        <RadioButton GroupName="{Binding VectorGroup}"  IsChecked="{Binding Path=Vector[1], Mode=TwoWay}" x:Name="RadioVector2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" RenderTransformOrigin="0.636,0.257" Height="41" Margin="86,0,87,0"/>
+                        <RadioButton GroupName="{Binding VectorGroup}" IsChecked="False" x:Name="RadioVector1" Content="RadioOne" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,87,0"/>
+                        <RadioButton GroupName="{Binding VectorGroup}" IsChecked="True" x:Name="RadioVector2" Content="RadioTwo" DockPanel.Dock="Top" HorizontalAlignment="Center" Height="40" Margin="86,0,87,0" 
+                                     Checked="RadioVector2_Checked"/>
                     </DockPanel>
 
                     <StackPanel Grid.Column="1" Grid.Row="4">
@@ -117,7 +118,7 @@
                             <RowDefinition Height="1*"/>
                         </Grid.RowDefinitions>
                         <Label Grid.Column="1" Content="Other" VerticalAlignment="Center" FontSize="18"  VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
-                        <CheckBox Grid.Column="1" Grid.Row="1" Name="drawGridCheck" IsChecked="True" Content="Draw grid"
+                        <CheckBox Grid.Column="1" Grid.Row="1" Name="drawGridCheck" IsChecked="False" Content="Draw grid"
                                   Checked="CheckBox_Changed" Unchecked="CheckBox_Changed"/>
                     </Grid>
                 </Grid>

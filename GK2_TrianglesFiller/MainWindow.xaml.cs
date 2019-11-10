@@ -101,5 +101,11 @@ namespace GK2_TrianglesFiller
                 host?.UpdateBackground();
             }
         }
+
+        private void RadioVector2_Checked(object sender, RoutedEventArgs e)
+        {
+            UseConstantVector = false;
+            host?.UpdateBackground();
+        }
     }
 }

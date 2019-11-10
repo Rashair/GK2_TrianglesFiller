@@ -8,10 +8,10 @@ namespace GK2_TrianglesFiller.Resources
     public static class Configuration
     {
         public static bool DrawVertices = false;
-        public static bool DrawGrid = true;
+        public static bool DrawGrid = false;
 
         public static bool ObjectColorFromTexture = true;
-        public static BitmapImage DefaultImage = new BitmapImage(new Uri(@"pack://application:,,,/Resources/wallpaper.png"));
+        public static BitmapImage DefaultImage = new BitmapImage(new Uri(@"pack://application:,,,/Images/wallpaper.png"));
 
         private static Color lightColor;
         public static Color LightColor
@@ -24,10 +24,13 @@ namespace GK2_TrianglesFiller.Resources
             }
         }
 
+        public static bool UseConstantVector = false;
+        public static BitmapImage DefaultNormalMap = new BitmapImage(new Uri(@"pack://application:,,,/Images/my_normal_map.jpg"));
+
         public const double SideLength = 120;
         public const double DPI = 96;
-        public static PixelFormat PixelFormat = PixelFormats.Bgra32;
-        public static readonly int BytesPerPixel = (PixelFormat.BitsPerPixel + 7) / 8;
+        public static PixelFormat MyPixelFormat = PixelFormats.Bgra32;
+        public static readonly int BytesPerPixel = (MyPixelFormat.BitsPerPixel + 7) / 8;
 
         public const double VertexRadius = 5.0;
         public static Brush VertexBrush = Brushes.Black;

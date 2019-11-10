@@ -164,7 +164,16 @@
     <Resource Include="Resources\Entypo-license.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\wallpaper.png" />
+    <Resource Include="Images\brick_normalmap.png" />
+    <Resource Include="Images\normal_map.jpg" />
+    <Resource Include="Images\wallpaper.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\brick_normalmap2.jpg" />
+    <Resource Include="Images\normal_map2.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\my_normal_map.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
