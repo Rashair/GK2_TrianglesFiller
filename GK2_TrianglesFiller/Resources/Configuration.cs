@@ -2,6 +2,7 @@
 using System;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 namespace GK2_TrianglesFiller.Resources
 {
@@ -24,6 +25,18 @@ namespace GK2_TrianglesFiller.Resources
             }
         }
 
+        private static Vector3D lightVersor;
+        public static int currentAngle;
+        public static Vector3D LightVersor
+        {
+            get => lightVersor;
+            set
+            {
+                lightVersor = value;
+                ColorGenerator.LightVersor = value;
+            }
+        }
+
         public static bool UseConstantVector { get; set; } = false;
         public static BitmapImage DefaultNormalMap = new BitmapImage(new Uri(@"pack://application:,,,/Images/brick_normal_map2.png"));
 
@@ -35,6 +48,7 @@ namespace GK2_TrianglesFiller.Resources
         public static int M { get; set; } = 10;
 
         public static double SideLength = 120;
+
         public const double DPI = 96;
         public static PixelFormat MyPixelFormat = PixelFormats.Bgra32;
         public static readonly int BytesPerPixel = (MyPixelFormat.BitsPerPixel + 7) / 8;
@@ -62,6 +76,8 @@ namespace GK2_TrianglesFiller.Resources
             {
                 DefaultNormalMap.Freeze();
             }
+
+            LightVersor = new Vector3D(0, 0, 255);
         }
     }
 }

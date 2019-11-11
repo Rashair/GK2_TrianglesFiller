@@ -12,7 +12,16 @@ namespace GK2_TrianglesFiller.DrawingRes
     {
         public static (double R, double G, double B) LightColor { get; set; }
         public static Vector3D DefaultNormalVector { get; } = new Vector3D(0, 0, 255);
-        public static Vector3D DefaultLightVersor { get; } = new Vector3D(0, 0, 255);
+        private static Vector3D lightVersor;
+        public static Vector3D LightVersor
+        {
+            get => lightVersor;
+            set
+            {
+                lightVersor = value;
+                lightVersor.Normalize();
+            }
+        }
         public static Vector3D V { get; } = new Vector3D(0, 0, 1);
 
         public static int GetValue(Color c)
@@ -50,15 +59,14 @@ namespace GK2_TrianglesFiller.DrawingRes
             this.M = M;
         }
 
-        public (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D? normalVectorNullable = null, Vector3D? lightVersorNullable = null)
+        public (byte R, byte G, byte B) ComputeColor(byte R, byte G, byte B, Vector3D normalVector)
         {
-            var N = normalVectorNullable ?? DefaultNormalVector;
-            var L = lightVersorNullable ?? DefaultLightVersor;
+            var N = normalVector;
+            var L = LightVersor;
 
             N = GetRelativeVector(N);
             N.ComputeNormalVector();
-            L = GetRelativeVector(L);
-            Vector3D RVector = 2 * Vector3D.DotProduct(N, L) * N - L;
+            Vector3D RVector = 2 * Vector3D.DotProduct(N, lightVersor) * N - lightVersor;
 
             double rVal = R * LightColor.R;
             double gVal = G * LightColor.G;
@@ -76,8 +84,10 @@ namespace GK2_TrianglesFiller.DrawingRes
 
 
         /// <summary>
-        ///  Interpolation section
+        ///  Interpolation section:
         /// </summary>
+        /// <param name="colors">Passed only with (R, G, B) values of triangle vertices colors - size = 9 </param>
+        /// 
         private byte[] interpolationColors = null;
         private byte[] computedColors = null;
         private Vector3D[] interVectors = null;
@@ -85,9 +95,9 @@ namespace GK2_TrianglesFiller.DrawingRes
         public void SetColorsForInterpolation(List<Point> triangle, byte[] colors, Vector3D[] normalVectors)
         {
             this.triangle = triangle;
-            // ARGB
+            // RGB
             computedColors = new byte[colors.Length];
-            for (int i = 0; i < 9; i += 3)
+            for (int i = 0; i < colors.Length; i += 3)
             {
                 var (R, G, B) = ComputeColor(colors[i], colors[i + 1], colors[i + 2], normalVectors[i / 3]);
                 computedColors[i] = R;
@@ -129,11 +139,10 @@ namespace GK2_TrianglesFiller.DrawingRes
             }
             else
             {
-                var L = DefaultLightVersor;
+                var L = LightVersor;
                 Vector3D N = GetInterpolatedVector(d);
                 N = GetRelativeVector(N);
                 N.ComputeNormalVector();
-                L = GetRelativeVector(L);
                 Vector3D RVector = 2 * Vector3D.DotProduct(N, L) * N - L;
 
                 double val = (d.X * interpolationColors[i] + d.Y * interpolationColors[i + 3] + d.Z * interpolationColors[i + 6]) / (d.X + d.Y + d.Z)

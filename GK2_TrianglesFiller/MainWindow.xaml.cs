@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using static GK2_TrianglesFiller.Resources.Configuration;
 
@@ -15,12 +16,6 @@ namespace GK2_TrianglesFiller
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        //public string ObjectColorGroup { get; } = Guid.NewGuid().ToString();
-        //public string LightVersorGroup { get; } = Guid.NewGuid().ToString();
-        //public string VectorGroup { get; } = Guid.NewGuid().ToString();
-        //public string FillColorGroup { get; } = Guid.NewGuid().ToString();
-        //public string FactorsGroup { get; } = Guid.NewGuid().ToString();
-
         private DrawingHost host;
         private DispatcherTimer dispatcherTimer = new DispatcherTimer();
 
@@ -28,7 +23,7 @@ namespace GK2_TrianglesFiller
         {
             InitializeComponent();
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(50);
+            dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
         }
 
         private void MyWindow_Loaded(object sender, RoutedEventArgs e)
@@ -49,6 +44,8 @@ namespace GK2_TrianglesFiller
         // Not running yet
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
+            LightVersor = new Vector3D(Math.Cos(currentAngle) * 255, Math.Sin(currentAngle) * 255, 255);
+            currentAngle = (currentAngle + 1) % 360;
             host.UpdateBackground();
         }
 
@@ -255,6 +252,24 @@ namespace GK2_TrianglesFiller
             {
                 FillColor = 3;
                 host?.UpdateBackground();
+            }
+        }
+
+        private void RadioLightVersor2_Checked(object sender, RoutedEventArgs e)
+        {
+            if (this.IsLoaded && RadioLightVersor2.IsChecked.Value)
+            {
+                dispatcherTimer.Start();
+            }
+        }
+
+        private void RadioLightVersor2_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (this.IsLoaded && RadioLightVersor1.IsChecked.Value)
+            {
+                dispatcherTimer.Stop();
+                LightVersor = new Vector3D(0, 0, 255);
+                host.UpdateBackground();
             }
         }
     }
