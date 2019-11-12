@@ -38,7 +38,7 @@ namespace GK2_TrianglesFiller.Resources
         }
 
         public static bool UseConstantVector { get; set; } = false;
-        public static BitmapImage DefaultNormalMap = new BitmapImage(new Uri(@"pack://application:,,,/Images/brick_normal_map2.png"));
+        public static BitmapImage DefaultNormalMap = new BitmapImage(new Uri(@"pack://application:,,,/Images/ball_normal_map2.png"));
 
         public static int FillColor { get; set; } = 1;
 

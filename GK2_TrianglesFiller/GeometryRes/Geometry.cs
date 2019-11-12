@@ -49,10 +49,10 @@ namespace GK2_TrianglesFiller.GeometryRes
 
         public static void ComputeNormalVector(this Vector3D v)
         {
+            v.Normalize();
             v.X = 2 * v.X - 1;
             v.Y = 2 * v.Y - 1;
             v.Z = 2 * v.Z - 1;
-            v.Normalize();
         }
     }
 }

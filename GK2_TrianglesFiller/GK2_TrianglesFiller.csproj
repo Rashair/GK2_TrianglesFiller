@@ -184,5 +184,8 @@
   <ItemGroup>
     <Resource Include="Images\brick_normal_map2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\wallpaper2.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

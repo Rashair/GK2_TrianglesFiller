@@ -22,7 +22,7 @@ namespace GK2_TrianglesFiller
         public MainWindow()
         {
             InitializeComponent();
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Tick += DispatcherTimer_Tick;
             dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
         }
 
@@ -41,13 +41,6 @@ namespace GK2_TrianglesFiller
             MyCanvas.Children.Add(host);
         }
 
-        // Not running yet
-        private void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            LightVersor = new Vector3D(Math.Cos(currentAngle) * 255, Math.Sin(currentAngle) * 255, 255);
-            currentAngle = (currentAngle + 1) % 360;
-            host.UpdateBackground();
-        }
 
         private void ObjectColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
         {
@@ -259,9 +252,26 @@ namespace GK2_TrianglesFiller
         {
             if (this.IsLoaded && RadioLightVersor2.IsChecked.Value)
             {
+                // currentAngle = 0;
+                LightVersor = new Vector3D(0, 0, 255);
                 dispatcherTimer.Start();
             }
         }
+
+
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
+        {
+
+            // currentAngle = (currentAngle + 5) % 90;
+            LightVersor = GetNewLightVector();
+            host.UpdateBackground();
+        }
+
+        private Vector3D GetNewLightVector()
+        {
+            return new Vector3D((LightVersor.X + 1) % 125, 0, LightVersor.Z);
+        }
+
 
         private void RadioLightVersor2_Unchecked(object sender, RoutedEventArgs e)
         {

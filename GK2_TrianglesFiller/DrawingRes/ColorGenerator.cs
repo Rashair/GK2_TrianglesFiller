@@ -75,9 +75,9 @@ namespace GK2_TrianglesFiller.DrawingRes
             var cos1 = Vector3D.DotProduct(N, L);
             var cos2 = Math.Pow(Vector3D.DotProduct(V, RVector), M);
 
-            rVal = Kd * rVal * cos1 + Ks * rVal * cos2;
-            gVal = Kd * gVal * cos1 + Ks * gVal * cos2;
-            bVal = Kd * bVal * cos1 + Ks * bVal * cos2;
+            rVal = Math.Min(Kd * rVal * cos1 + Ks * rVal * cos2, 255);
+            gVal = Math.Min(Kd * gVal * cos1 + Ks * gVal * cos2, 255);
+            bVal = Math.Min(Kd * bVal * cos1 + Ks * bVal * cos2, 255);
 
             return ((byte)rVal, (byte)gVal, (byte)bVal);
         }
@@ -132,10 +132,10 @@ namespace GK2_TrianglesFiller.DrawingRes
         {
             if (Configuration.FillColor == 2)
             {
-                return (byte)((d.X * computedColors[i] +
+                return (byte)Math.Min(((d.X * computedColors[i] +
                                d.Y * computedColors[i + 3] +
                                d.Z * computedColors[i + 6])
-                               / (d.X + d.Y + d.Z));
+                               / (d.X + d.Y + d.Z)), 255);
             }
             else
             {
